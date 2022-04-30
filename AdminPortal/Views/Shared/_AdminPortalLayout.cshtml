@@ -1,0 +1,123 @@
+﻿<!DOCTYPE html>
+<html dir="ltr" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords"
+          content="wrappixel, admin dashboard, html css dashboard, web dashboard, bootstrap 5 admin, bootstrap 5, css3 dashboard, bootstrap 5 dashboard, Ample lite admin bootstrap 5 dashboard, frontend, responsive bootstrap 5 admin template, Ample admin lite dashboard bootstrap 5 dashboard template">
+    <meta name="description"
+          content="Ample Admin Lite is powerful and clean admin dashboard template, inpired from Bootstrap Framework">
+    <meta name="robots" content="noindex,nofollow">
+    <title>Ample Admin Lite Template by WrapPixel</title>
+    <link rel="canonical" href="https://www.wrappixel.com/templates/ample-admin-lite/" />
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="/Images/favicon.png">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.min.css">
+    <link rel="stylesheet" href="~/lib/font-awesome/css/all.css" />
+    <link rel="stylesheet" href="~/lib/font-awesome/css/fontawesome.css" />
+</head>
+
+<body>
+    <div class="preloader">
+        <div class="lds-ripple">
+            <div class="lds-pos"></div>
+            <div class="lds-pos"></div>
+        </div>
+    </div>
+    <div id="main-wrapper" data-layout="vertical" data-navbarbg="skin5" data-sidebartype="full"
+         data-sidebar-position="absolute" data-header-position="absolute" data-boxed-layout="full">
+        <header class="topbar" data-navbarbg="skin5">
+            <nav class="navbar top-navbar navbar-expand-md navbar-dark">
+                <div class="navbar-header" data-logobg="skin6">
+                    <a class="navbar-brand" href="dashboard.html">
+                        <b class="logo-icon">
+                            <img src="/Images/logo-icon.png" alt="homepage" />
+                        </b>
+                        <span class="logo-text">
+                            <img src="/Images/AdminPortalIcon.png" alt="homepage" />
+                        </span>
+                    </a>
+                    <a class="nav-toggler waves-effect waves-light text-dark d-block d-md-none"
+                       href="javascript:void(0)"><i class="ti-menu ti-close"></i></a>
+                </div>
+                <ul class="navbar-nav ms-auto d-flex align-items-center">
+                    <li class=" in">
+                        <form role="search" class="app-search d-none d-md-block me-3">
+                            <input type="text" placeholder="Search..." class="form-control mt-0">
+                        </form>
+                    </li>
+                </ul>
+            </nav>
+        </header>
+        <aside class="left-sidebar" data-sidebarbg="skin6">
+            <div class="scroll-sidebar">
+                <nav class="sidebar-nav">
+                    <ul id="sidebarnav">
+                        <li class="sidebar-item pt-2">
+                            <a class="sidebar-link waves-effect waves-dark sidebar-link" href="dashboard.html"
+                               aria-expanded="false">
+                                <i class="far fa-clock" aria-hidden="true"></i>
+                                <span class="hide-menu">Home</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link waves-effect waves-dark sidebar-link" href="profile.html"
+                               aria-expanded="false">
+                                <i class="fa fa-user" aria-hidden="true"></i>
+                                <span class="hide-menu">Employee Search</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link waves-effect waves-dark sidebar-link" href="basic-table.html"
+                               aria-expanded="false">
+                                <i class="fa fa-users" aria-hidden="true"></i>
+                                <span class="hide-menu">Employee Management</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link waves-effect waves-dark sidebar-link" href="fontawesome.html"
+                               aria-expanded="false">
+                                <i class="fa fa-graduation-cap" aria-hidden="true"></i>
+                                <span class="hide-menu">Course Management</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link waves-effect waves-dark sidebar-link" href="map-google.html"
+                               aria-expanded="false">
+                                <i class="fa fa-user" aria-hidden="true"></i>
+                                <span class="hide-menu">User Management</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link waves-effect waves-dark sidebar-link" href="blank.html"
+                               aria-expanded="false">
+                                <i class="fa fa-sign-out" aria-hidden="true"></i>
+                                <span class="hide-menu">Logout</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+        <div class="page-wrapper">
+            @RenderBody()
+        </div>
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="/Js/jquery.sparkline.min.js"></script>
+    <script src="/js/waves.js"></script>
+    <script src="/js/sidebarmenu.js"></script>
+    <script src="/js/custom.js"></script>
+    <script src="/js/dashboard1.js"></script>
+    <script src="/js/app-style-switcher.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+
+</html>
