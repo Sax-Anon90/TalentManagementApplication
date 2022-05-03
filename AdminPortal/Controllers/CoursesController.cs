@@ -7,167 +7,143 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AdminPortal.Data;
-using AdminPortal.Repositories.Contracts;
-using AdminPortal.Models;
+using AdminPortal.Common.Models;
+using AdminPortal.CoreBusiness.Repositories.Contracts;
 
-namespace AdminPortal.Controllers
+namespace AdminPortal.UI.Controllers
 {
     public class CoursesController : Controller
     {
-        private readonly SaxTalentManagementContext _context;
-        private readonly ICoursesRepository _coursesRepository;
-        private readonly ICourseCategoryRepository _courseCategoryRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public CoursesController(SaxTalentManagementContext context, ICoursesRepository _coursesRepository,
-             ICourseCategoryRepository _courseCategoryRepository)
+        public CoursesController(IUnitOfWork _unitOfWork)
         {
-            _context = context;
-            this._coursesRepository = _coursesRepository;
-            this._courseCategoryRepository = _courseCategoryRepository;
+            this._unitOfWork = _unitOfWork;
         }
 
-        // GET: Courses
         public async Task<IActionResult> Index()
         {
-            var courses = await _coursesRepository.GetAllCourses();
-            var courseCategories = await _courseCategoryRepository.GetAllCourseCategories();
+            var courses = await _unitOfWork.CoursesRepository.GetAllCourses();
+            var courseCategories = await _unitOfWork.CourseCategoriesRepository.GetAllCourseCategories();
             var CourseAndCourseCategoryModel = new CoursesAndCourseCategoriesVM()
             {
                 CoursesViewModel = courses,
                 CourseCategoriesViewModel = courseCategories,
+                CourseCreateViewModel = new CourseCreateViewModel
+                {
+                    CourseCategories = new SelectList(courseCategories, "Id", "CategoryName")
+                }
             };
             return View(CourseAndCourseCategoryModel);
         }
 
-        // GET: Courses/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var course = await _context.Courses
-                .Include(c => c.CourseCategory)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (course == null)
-            {
-                return NotFound();
-            }
-
-            return View(course);
-        }
-
-        // GET: Courses/Create
-        public IActionResult Create()
-        {
-            ViewData["CourseCategoryId"] = new SelectList(_context.CourseCategories, "Id", "Id");
-            return View();
-        }
-
-        // POST: Courses/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CourseName,CourseCategoryId")] Course course)
+        public async Task<IActionResult> AddNewCourse(CoursesAndCourseCategoriesVM coursesAndCourseCategoriesVM)
         {
-            if (ModelState.IsValid)
+            var validationResult = coursesAndCourseCategoriesVM.CourseCreateViewModel.Validation();
+            if (validationResult == false)
             {
-                _context.Add(course);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                TempData["AddNewCourseFailed"] = "Course not added. Please ensure you enter all required details. if the problem persists, contact the systems administrator";
+                return RedirectToAction(nameof(Index), "Courses");
             }
-            ViewData["CourseCategoryId"] = new SelectList(_context.CourseCategories, "Id", "Id", course.CourseCategoryId);
-            return View(course);
+            await _unitOfWork.CoursesRepository.AddNewCourse(coursesAndCourseCategoriesVM);
+            TempData["AddNewCourseSuccess"] = "New Course Successfully Added";
+            return RedirectToAction(nameof(Index), "Courses");
         }
 
-        // GET: Courses/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var course = await _context.Courses.FindAsync(id);
-            if (course == null)
-            {
-                return NotFound();
-            }
-            ViewData["CourseCategoryId"] = new SelectList(_context.CourseCategories, "Id", "Id", course.CourseCategoryId);
-            return View(course);
-        }
-
-        // POST: Courses/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CourseName,CourseCategoryId")] Course course)
+        public async Task<IActionResult> UploadCourseFileAttachment(CoursesAndCourseCategoriesVM courseFileAttachment, int courseId)
         {
-            if (id != course.Id)
+            var result = await _unitOfWork.CourseFileAttachmentsRepository.UploadCourseFileAttachment(courseFileAttachment, courseId);
+            if (result == false)
             {
-                return NotFound();
+                TempData["FileUploadFail"] = "Course File Upload failed. Please ensure that you have entered a valid file. If the problem persists, contact the systems administrator";
+                return RedirectToAction(nameof(Index), "Courses");
             }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(course);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CourseExists(course.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["CourseCategoryId"] = new SelectList(_context.CourseCategories, "Id", "Id", course.CourseCategoryId);
-            return View(course);
+            TempData["FileUploadSuccess"] = "Course File Uploaded successfully";
+            return RedirectToAction(nameof(Index), "Courses");
         }
 
-        // GET: Courses/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        [HttpGet]
+        public async Task<PartialViewResult> CourseDetailsPopUpView(int? courseId)
         {
-            if (id == null)
+            var courseDetails = await _unitOfWork.CoursesRepository.GetCourseDetails(courseId);
+            var courseFileAttachments = await _unitOfWork.CourseFileAttachmentsRepository.GetAllCourseFileAttachmentsById(courseId);
+            var CourseDetailsAndCourseFiles = new CourseDetailsAndCourseFilesVM
             {
-                return NotFound();
-            }
-
-            var course = await _context.Courses
-                .Include(c => c.CourseCategory)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (course == null)
-            {
-                return NotFound();
-            }
-
-            return View(course);
+                CourseDetails = courseDetails,
+                CourseFileAttachments = courseFileAttachments
+            };
+            return PartialView("_CourseDetailsPopUpViewModal", CourseDetailsAndCourseFiles);
+        }
+        public async Task<IActionResult> DownloadCourseFileAttachment(int Id)
+        {
+            var courseFileAttachment = await _unitOfWork.CourseFileAttachmentsRepository.GetCourseFileAttachment(Id);
+            var fileName = courseFileAttachment.FileName;
+            var fileType = courseFileAttachment.FileType;
+            var fileContent = courseFileAttachment.FileContent;
+            return File(fileContent, fileType, fileName);
         }
 
-        // POST: Courses/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpGet]
+        public async Task<PartialViewResult> UpdateCoursePopUpView(int? courseId)
+        {
+            var course = await _unitOfWork.CoursesRepository.GetCourseDetails(courseId);
+            var courseCategories = await _unitOfWork.CourseCategoriesRepository.GetAllCourseCategories();
+            course.CourseCategories = new SelectList(courseCategories, "Id", "CategoryName");
+            return PartialView("_UpdateCoursePopUpViewModal", course);
+        }
+
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> UpdateCourse(CoursesVM courseUpdateModal)
         {
-            var course = await _context.Courses.FindAsync(id);
-            _context.Courses.Remove(course);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            var validationResult = courseUpdateModal.Validation();
+            if (validationResult == false)
+            {
+                TempData["UpdateCourseFail"] = "Course Update Failed. Please ensure that you enter all required details. If the problem persists, contact the systems administrator";
+                RedirectToAction(nameof(Index), "Courses");
+            }
+            await _unitOfWork.CoursesRepository.UpdateCourse(courseUpdateModal);
+            TempData["CourseUpdateSuccess"] = "Course successfully updated";
+            return RedirectToAction(nameof(Index), "Courses");
         }
 
-        private bool CourseExists(int id)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteCourseFileAttachment(int courseFileAttachmentId)
         {
-            return _context.Courses.Any(e => e.Id == id);
+            await _unitOfWork.CourseFileAttachmentsRepository.DeleteCourseFileAttachment(courseFileAttachmentId);
+            TempData["CourseFileDeleteSuccess"] = "Course File Attachment successfully deleted";
+            return RedirectToAction(nameof(Index), "Courses");
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteCourse(int Id)
+        {
+            await _unitOfWork.CoursesRepository.DeleteCourse(Id);
+            TempData["CourseDeleteSuccess"] = "Course Successfully Deleted";
+            return RedirectToAction(nameof(Index), "Courses");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddNewCourseCategory(CoursesAndCourseCategoriesVM coursesAndCourseCategoriesVM)
+        {
+            var validationResult = coursesAndCourseCategoriesVM.courseCategoryCreateVM.validation();
+            if (validationResult == false)
+            {
+                TempData["CourseCategoryFail"] = "Course Category not added. Please ensure you have added all required details. If the problem persists contact the systems administrator";
+                return RedirectToAction(nameof(Index), "Courses");
+            }
+            await _unitOfWork.CourseCategoriesRepository.AddNewCourseCategory(coursesAndCourseCategoriesVM);
+            TempData["CourseCategorySucess"] = "Course Category added successfully.";
+            return RedirectToAction(nameof(Index), "Courses");
+        }
+
+
     }
 }

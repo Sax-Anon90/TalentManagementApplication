@@ -1,13 +1,13 @@
 ﻿using AdminPortal.Data;
-using AdminPortal.Models;
-using AdminPortal.Repositories.Contracts;
+using AdminPortal.Common.Models;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using AdminPortal.CoreBusiness.Repositories.Contracts;
 
-namespace AdminPortal.Repositories.Implementation
+namespace AdminPortal.CoreBusiness.Repositories.Implementation
 {
-    
+
     public class DepartmentsRepository : IDepartmentsRepository
     {
         private readonly SaxTalentManagementContext _dbContext;

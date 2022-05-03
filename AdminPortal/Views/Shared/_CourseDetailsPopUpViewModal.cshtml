@@ -1,0 +1,75 @@
+﻿@model CourseDetailsAndCourseFilesVM
+
+<div class="modal fade" id="courseDetails" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h4>Course Details</h4>
+                <hr />
+                <dl class="row">
+                    <dt class="col-sm-5">
+                        @Html.DisplayNameFor(model => model.CourseDetails.CourseName)
+                    </dt>
+                    <dd class="col-sm-7">
+                        @Html.DisplayFor(model => model.CourseDetails.CourseName)
+                    </dd>
+                    <dt class="col-sm-5">
+                        Course Category
+                    </dt>
+                    <dd class="col-sm-7">
+                        @Html.DisplayFor(model => model.CourseDetails.CourseCategory.CategoryName)
+                    </dd>
+                </dl>
+                <br />
+                <h4>Course Content Material</h4>
+                @if (Model.CourseFileAttachments.Count() == 0)
+                {
+                    <div class="alert alert-danger" role="alert">
+                        This course does not have any course content material
+                    </div>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table table-striped" style="width:100%">
+                            <thead style="background-color:#333130;">
+                                <tr>
+                                    <th style="color:white;">File Name</th>
+                                    <th style="color:white;">Download File</th>
+                                    <th style="color:white;">Delete File</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var file in Model.CourseFileAttachments)
+                                {
+                                    <tr>
+                                        <td>@file.FileName</td>
+                                        <td>
+                                            <form asp-controller="Courses" asp-action="DownloadCourseFileAttachment"
+                                          asp-route-Id="@file.Id">
+                                                <button type="submit" class="btn btn-info">
+                                                    <i class="fa fa-download"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                        <td>
+                                            <button type="button" data-courseFileAttachmentId="@file.Id" class="btn btn-danger deleteCourseFile">
+                                                <i class="far fa-trash-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+        <form asp-controller="Courses" asp-action="DeleteCourseFileAttachment" id="DeleteCourseFileAttachmentForm">
+            <input type="hidden" id="courseFileAttachmentId" name="courseFileAttachmentId">
+        </form>
+    </div>
+</div>

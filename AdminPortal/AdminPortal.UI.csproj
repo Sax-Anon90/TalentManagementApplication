@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -19,6 +19,12 @@
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.3" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AdminPortal.Common\AdminPortal.Common.csproj" />
+    <ProjectReference Include="..\AdminPortal.CoreBusiness\AdminPortal.CoreBusiness.csproj" />
+    <ProjectReference Include="..\AdminPortal.Data\AdminPortal.Data.csproj" />
   </ItemGroup>
 
 </Project>

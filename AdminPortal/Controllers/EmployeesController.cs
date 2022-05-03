@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AdminPortal.Data;
 
-namespace AdminPortal.Controllers
+namespace AdminPortal.UI.Controllers
 {
     public class EmployeesController : Controller
     {

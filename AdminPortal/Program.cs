@@ -1,7 +1,7 @@
 using AdminPortal.Data;
-using AdminPortal.Mappings;
-using AdminPortal.Repositories.Contracts;
-using AdminPortal.Repositories.Implementation;
+using AdminPortal.CoreBusiness.Repositories.Implementation;
+using AdminPortal.UI.Mappings;
+using AdminPortal.CoreBusiness.Repositories.Contracts;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,9 +13,7 @@ builder.Services.AddDbContext<SaxTalentManagementContext>(options => options.Use
 
 //Dependancy Injection
 builder.Services.AddAutoMapper(typeof(MapperConfig));
-builder.Services.AddScoped<IDepartmentsRepository, DepartmentsRepository>();
-builder.Services.AddScoped<ICoursesRepository, CoursesRepository>();
-builder.Services.AddScoped<ICourseCategoryRepository, CourseCategoryRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 var app = builder.Build();
 

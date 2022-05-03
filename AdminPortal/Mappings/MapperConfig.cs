@@ -1,8 +1,8 @@
 ﻿using AdminPortal.Data;
-using AdminPortal.Models;
+using AdminPortal.Common.Models;
 using AutoMapper;
 
-namespace AdminPortal.Mappings
+namespace AdminPortal.UI.Mappings
 {
     public class MapperConfig : Profile
     {
@@ -11,6 +11,7 @@ namespace AdminPortal.Mappings
             CreateMap<Department, DepartmentsVM>().ReverseMap();
             CreateMap<Course, CoursesVM>().ReverseMap();
             CreateMap<CourseCategory, CourseCategoryVM>().ReverseMap();
+            CreateMap<CourseFileAttachment, CourseFileAttachmentViewVM>().ReverseMap();
         }
     }
 }

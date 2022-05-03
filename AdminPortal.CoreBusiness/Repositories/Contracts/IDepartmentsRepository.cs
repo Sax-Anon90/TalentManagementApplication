@@ -1,7 +1,6 @@
-﻿using AdminPortal.Data;
-using AdminPortal.Models;
+﻿using AdminPortal.Common.Models;
 
-namespace AdminPortal.Repositories.Contracts
+namespace AdminPortal.CoreBusiness.Repositories.Contracts
 {
     public interface IDepartmentsRepository
     {

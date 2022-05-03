@@ -1,8 +1,8 @@
-﻿using AdminPortal.Models;
+﻿
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
-namespace AdminPortal.Controllers
+namespace AdminPortal.UI.Controllers
 {
     public class HomeController : Controller
     {

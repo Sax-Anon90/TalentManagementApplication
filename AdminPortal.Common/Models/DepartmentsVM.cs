@@ -1,4 +1,4 @@
-﻿namespace AdminPortal.Models
+﻿namespace AdminPortal.Common.Models
 {
     public class DepartmentsVM
     {
