@@ -1,4 +1,4 @@
-﻿using AdminPortal.Data;
+﻿using AdminPortal.Data.Data;
 using AdminPortal.Common.Models;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;

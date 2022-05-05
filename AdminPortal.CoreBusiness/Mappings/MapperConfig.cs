@@ -1,8 +1,8 @@
-﻿using AdminPortal.Data;
+﻿using AdminPortal.Data.Data;
 using AdminPortal.Common.Models;
 using AutoMapper;
 
-namespace AdminPortal.UI.Mappings
+namespace AdminPortal.CoreBusiness.Mappings
 {
     public class MapperConfig : Profile
     {

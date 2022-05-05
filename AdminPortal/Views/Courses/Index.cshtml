@@ -1,5 +1,6 @@
 ﻿@model CoursesAndCourseCategoriesVM
 
+<br />
 @if (TempData["AddNewCourseFailed"] != null)
 {
     <div class="alert alert-danger" role="alert">
@@ -48,6 +49,101 @@
         @TempData["CourseDeleteSuccess"]
     </div>
 }
+@if (TempData["CourseCategoryFail"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["CourseCategoryFail"]
+    </div>
+}
+@if (TempData["CourseDeleteSuccess"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["CourseCategorySucess"]
+    </div>
+}
+@if (TempData["CourseCategoryUpdateSucess"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["CourseCategoryUpdateSucess"]
+    </div>
+}
+@if (TempData["CourseCategoryUpdateFail"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["CourseCategoryUpdateFail"]
+    </div>
+}
+
+@if (TempData["CourseCategoryDeleteSuccess"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["CourseCategoryDeleteSuccess"]
+    </div>
+}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-info">
+                    <div class="inner">
+                        <h3>150</h3>
+                        <p>Total Courses</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-bag"></i>
+                    </div>
+                </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-success">
+                    <div class="inner">
+                        <h3>53<sup style="font-size: 20px">%</sup></h3>
+                        <p>Total course categories</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-stats-bars"></i>
+                    </div>
+                </div>
+            </div>
+            <!-- ./col -->
+            @* <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-warning">
+                <div class="inner">
+                <h3>44</h3>
+
+                <p>User Registrations</p>
+                </div>
+                <div class="icon">
+                <i class="ion ion-person-add"></i>
+                </div>
+                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+                </div>*@
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-danger">
+                    <div class="inner">
+                        <h3>65</h3>
+
+                        <p>Unique Visitors</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-pie-graph"></i>
+                    </div>
+                </div>
+            </div>
+            <!-- ./col -->
+        </div>
+
+    </div>
+</section>
+
 <div class="card border border-dark p-1">
     <div class="card-header bg-success" style="color:white"><h3>Course Management <i class="fa fa-graduation-cap"></i></h3></div>
     <nav>
@@ -195,6 +291,8 @@
             <br />
             <br />
             <div class="table-responsive">
+                <div id="CourseCategoryDetailsPlaceHolderHere"></div>
+                <div id="CourseCategoryUpdatePlaceHolderHere"></div>
                 <table class="table table-striped" style="width:100%">
                     <thead style="background-color:#333130;">
                         <tr>
@@ -208,17 +306,26 @@
                             <tr>
                                 <td>@category.CategoryName</td>
                                 <td>
-                                    <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModalCenter" class="btn btn-warning" style="float:left;margin-left:10px;">
-                                        <i class="fa fa-plus"></i> Update
+                                    <button type="button" data-bs-toggle="modal viewModal" data-bs-target="#courseCategoryDetails"
+                                        data-url="@Url.Action("CourseCategoryDetailsPopUpView", "Courses", new{courseCategoryId = @category.Id})" class="btn btn-info" style="float:left;margin-left:10px;">
+                                        <i class="fa fa-info-circle"></i>
                                     </button>
-                                    <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModalCenter" class="btn btn-danger" style="float:left;margin-left:10px;">
-                                        <i class="fa fa-plus"></i> Delete
+                                    <button type="button" data-bs-toggle="modal update" data-bs-target="#UpdateCourseCategoryModal"
+                                        data-url="@Url.Action("UpdateCourseCategoryPopUpView", "Courses", new {courseCategoryId = @category.Id})" class="btn btn-warning" style="float:left;margin-left:10px;">
+                                        <i class="fa fa-pencil"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-danger DeleteCourseCategorybtn"
+                                        data-courseCategoryId="@category.Id" style="float:left;margin-left:10px;">
+                                        <i class="fa fa-trash"></i>
                                     </button>
                                 </td>
                             </tr>
                         }
                     </tbody>
                 </table>
+                <form asp-controller="Courses" asp-action="DeleteCourseCategory" id="DeleteCourseCategoryForm">
+                    <input type="hidden" id="courseCategoryId" name="courseCategoryId">
+                </form>
             </div>
         </div>
     </div>

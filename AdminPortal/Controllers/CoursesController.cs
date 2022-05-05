@@ -1,12 +1,6 @@
 ﻿#nullable disable
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using AdminPortal.Data;
 using AdminPortal.Common.Models;
 using AdminPortal.CoreBusiness.Repositories.Contracts;
 
@@ -48,6 +42,7 @@ namespace AdminPortal.UI.Controllers
                 return RedirectToAction(nameof(Index), "Courses");
             }
             await _unitOfWork.CoursesRepository.AddNewCourse(coursesAndCourseCategoriesVM);
+            await _unitOfWork.SaveChangesAsync();
             TempData["AddNewCourseSuccess"] = "New Course Successfully Added";
             return RedirectToAction(nameof(Index), "Courses");
         }
@@ -57,6 +52,7 @@ namespace AdminPortal.UI.Controllers
         public async Task<IActionResult> UploadCourseFileAttachment(CoursesAndCourseCategoriesVM courseFileAttachment, int courseId)
         {
             var result = await _unitOfWork.CourseFileAttachmentsRepository.UploadCourseFileAttachment(courseFileAttachment, courseId);
+            await _unitOfWork.SaveChangesAsync();
             if (result == false)
             {
                 TempData["FileUploadFail"] = "Course File Upload failed. Please ensure that you have entered a valid file. If the problem persists, contact the systems administrator";
@@ -107,6 +103,7 @@ namespace AdminPortal.UI.Controllers
                 RedirectToAction(nameof(Index), "Courses");
             }
             await _unitOfWork.CoursesRepository.UpdateCourse(courseUpdateModal);
+            await _unitOfWork.SaveChangesAsync();
             TempData["CourseUpdateSuccess"] = "Course successfully updated";
             return RedirectToAction(nameof(Index), "Courses");
         }
@@ -116,6 +113,7 @@ namespace AdminPortal.UI.Controllers
         public async Task<IActionResult> DeleteCourseFileAttachment(int courseFileAttachmentId)
         {
             await _unitOfWork.CourseFileAttachmentsRepository.DeleteCourseFileAttachment(courseFileAttachmentId);
+            await _unitOfWork.SaveChangesAsync();
             TempData["CourseFileDeleteSuccess"] = "Course File Attachment successfully deleted";
             return RedirectToAction(nameof(Index), "Courses");
         }
@@ -125,6 +123,7 @@ namespace AdminPortal.UI.Controllers
         public async Task<IActionResult> DeleteCourse(int Id)
         {
             await _unitOfWork.CoursesRepository.DeleteCourse(Id);
+            await _unitOfWork.SaveChangesAsync();
             TempData["CourseDeleteSuccess"] = "Course Successfully Deleted";
             return RedirectToAction(nameof(Index), "Courses");
         }
@@ -136,14 +135,53 @@ namespace AdminPortal.UI.Controllers
             var validationResult = coursesAndCourseCategoriesVM.courseCategoryCreateVM.validation();
             if (validationResult == false)
             {
-                TempData["CourseCategoryFail"] = "Course Category not added. Please ensure you have added all required details. If the problem persists contact the systems administrator";
+                TempData["CourseCategoryFail"] = "Course Category not added. Please ensure you have entered all required details. If the problem persists contact the systems administrator";
                 return RedirectToAction(nameof(Index), "Courses");
             }
             await _unitOfWork.CourseCategoriesRepository.AddNewCourseCategory(coursesAndCourseCategoriesVM);
+            await _unitOfWork.SaveChangesAsync();
             TempData["CourseCategorySucess"] = "Course Category added successfully.";
             return RedirectToAction(nameof(Index), "Courses");
         }
 
+        [HttpGet]
+        public async Task<PartialViewResult> CourseCategoryDetailsPopUpView(int courseCategoryId)
+        {
+            var courseCategory = await _unitOfWork.CourseCategoriesRepository.GetCourseCategoryDetails(courseCategoryId);
+            return PartialView("_CourseCategoryDetailsPopUpView", courseCategory);
+        }
 
+        [HttpGet]
+        public async Task<PartialViewResult> UpdateCourseCategoryPopUpView(int courseCategoryId)
+        {
+            var courseCategory = await _unitOfWork.CourseCategoriesRepository.GetCourseCategoryDetails(courseCategoryId);
+            return PartialView("_UpdateCourseCategoryPopUpView", courseCategory);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateCourseCategory(CourseCategoryVM courseCategoryVM)
+        {
+            var validationResult = courseCategoryVM.validation();
+            if(validationResult == false)
+            {
+                TempData["CourseCategoryUpdateFail"] = "Course Category not updated. Please ensure that you have entered all required details. If the problem persists, contact the systems administrator";
+                return RedirectToAction(nameof(Index), "Courses");
+            }
+            await _unitOfWork.CourseCategoriesRepository.UpdateCourseCategory(courseCategoryVM);
+            await _unitOfWork.SaveChangesAsync();
+            TempData["CourseCategoryUpdateSucess"] = "Course Category updated successfully.";
+            return RedirectToAction(nameof(Index), "Courses");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteCourseCategory(int courseCategoryId)
+        {
+            await _unitOfWork.CourseCategoriesRepository.DeleteCourseCategory(courseCategoryId);
+            await _unitOfWork.SaveChangesAsync();
+            TempData["CourseCategoryDeleteSuccess"] = "Course Category Successfully Deleted";
+            return RedirectToAction(nameof(Index), "Courses");
+        }
     }
 }

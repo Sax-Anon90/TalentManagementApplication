@@ -7,5 +7,8 @@ namespace AdminPortal.CoreBusiness.Repositories.Contracts
     {
         Task<ICollection<CourseCategoryVM>> GetAllCourseCategories();
         Task AddNewCourseCategory(CoursesAndCourseCategoriesVM coursesAndCourseCategoriesVM);
+        Task<CourseCategoryVM> GetCourseCategoryDetails(int courseCategoryId); 
+        Task UpdateCourseCategory(CourseCategoryVM courseCategoryVM);
+        Task DeleteCourseCategory(int courseCategoryId);
     }
 }

@@ -1,6 +1,6 @@
-using AdminPortal.Data;
+using AdminPortal.Data.Data;
 using AdminPortal.CoreBusiness.Repositories.Implementation;
-using AdminPortal.UI.Mappings;
+using AdminPortal.CoreBusiness.Mappings;
 using AdminPortal.CoreBusiness.Repositories.Contracts;
 using Microsoft.EntityFrameworkCore;
 

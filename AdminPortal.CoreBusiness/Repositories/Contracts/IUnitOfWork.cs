@@ -7,6 +7,6 @@ namespace AdminPortal.CoreBusiness.Repositories.Contracts
         ICourseCategoryRepository CourseCategoriesRepository { get; }
         ICoursesRepository CoursesRepository { get; }
         ICourseFileAttachmentRepository CourseFileAttachmentsRepository { get; }
-
+        Task SaveChangesAsync();
     }
 }

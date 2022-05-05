@@ -129,8 +129,7 @@ $(function () {
     });
 });
 
-function AddNewCourseCategory()
-{
+function AddNewCourseCategory() {
     swal.fire({
         text: "Adding new course category. Please wait ...",
         showConfirmButton: false,
@@ -140,3 +139,63 @@ function AddNewCourseCategory()
         }
     });
 }
+
+$(function () {
+    var PlaceHolderElement = $('#CourseCategoryUpdatePlaceHolderHere');
+    $('button[data-bs-toggle="modal update"]').click(function (event) {
+        var url = $(this).data('url');
+        $.get(url).done(function (data) {
+            PlaceHolderElement.html(data);
+            PlaceHolderElement.find('.modal').modal('show')
+        });
+    });
+});
+
+$(function () {
+    var PlaceHolderElement = $('#CourseCategoryDetailsPlaceHolderHere');
+    $('button[data-bs-toggle="modal viewModal"]').click(function (event) {
+        var url = $(this).data('url');
+        $.get(url).done(function (data) {
+            PlaceHolderElement.html(data);
+            PlaceHolderElement.find('.modal').modal('show')
+        });
+    });
+});
+
+function UpdateCourseCategory() {
+    swal.fire({
+        text: "Updating category Category. Please wait ...",
+        showConfirmButton: false,
+        allowOutsideClick: false,
+        didOpen: () => {
+            swal.showLoading();
+        }
+    });
+}
+
+
+$(function () {
+    $(document).on('click', '.DeleteCourseCategorybtn', function (event) {
+        swal.fire({
+            title: "Are you sure?",
+            text: "Are you sure you want to delete this course Category? By Deleting this category you will also remove all other courses in this category",
+            icon: "warning",
+            showCancelButton: true,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                swal.fire({
+                    text: "Deleting course Category. Please wait ...",
+                    showConfirmButton: false,
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        swal.showLoading();
+                    }
+                });
+                var btn = $(this);
+                var courseCategoryId = btn.attr('data-courseCategoryId');
+                $('#courseCategoryId').val(courseCategoryId);
+                document.getElementById('DeleteCourseCategoryForm').submit();
+            }
+        });
+    });
+});

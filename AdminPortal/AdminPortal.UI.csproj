@@ -24,7 +24,6 @@
   <ItemGroup>
     <ProjectReference Include="..\AdminPortal.Common\AdminPortal.Common.csproj" />
     <ProjectReference Include="..\AdminPortal.CoreBusiness\AdminPortal.CoreBusiness.csproj" />
-    <ProjectReference Include="..\AdminPortal.Data\AdminPortal.Data.csproj" />
   </ItemGroup>
 
 </Project>

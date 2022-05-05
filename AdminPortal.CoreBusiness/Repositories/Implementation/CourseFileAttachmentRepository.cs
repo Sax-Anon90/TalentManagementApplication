@@ -1,4 +1,4 @@
-﻿using AdminPortal.Data;
+﻿using AdminPortal.Data.Data;
 using AdminPortal.Common.Models;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -57,7 +57,6 @@ namespace AdminPortal.CoreBusiness.Repositories.Implementation
                 };
                 var fileAttachment = _mapper.Map<CourseFileAttachment>(fileAttachmentVM);
                 await _dbContext.CourseFileAttachments.AddAsync(fileAttachment);
-                await _dbContext.SaveChangesAsync();
                 return true;
             }
             catch (Exception)
@@ -69,7 +68,6 @@ namespace AdminPortal.CoreBusiness.Repositories.Implementation
         {
             var courseFileAttachment = await _dbContext.CourseFileAttachments.FirstOrDefaultAsync(x => x.Id == courseFileAttachmentId);
             _dbContext.CourseFileAttachments.Remove(courseFileAttachment);
-            await _dbContext.SaveChangesAsync();
         }
     }
 }

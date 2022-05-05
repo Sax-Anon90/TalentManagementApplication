@@ -1,4 +1,4 @@
-﻿using AdminPortal.Data;
+﻿using AdminPortal.Data.Data;
 using AdminPortal.Common.Models;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -48,7 +48,6 @@ namespace AdminPortal.CoreBusiness.Repositories.Implementation
             };
             var course = _mapper.Map<Course>(courseCreateModel);
             await _dbContext.Courses.AddAsync(course);
-            await _dbContext.SaveChangesAsync();
         }
 
         public async Task UpdateCourse(CoursesVM courseUpdateModel)
@@ -61,14 +60,12 @@ namespace AdminPortal.CoreBusiness.Repositories.Implementation
             };
             var courseModel = _mapper.Map<Course>(courseEditModel);
             _dbContext.Courses.Update(courseModel);
-            await _dbContext.SaveChangesAsync();
         }
 
         public async Task DeleteCourse(int Id)
         {
             var course = await _dbContext.Courses.FirstOrDefaultAsync(c => c.Id == Id);
             _dbContext.Courses.Remove(course);
-            await _dbContext.SaveChangesAsync();
         }
     }
 }
