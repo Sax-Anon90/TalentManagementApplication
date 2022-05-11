@@ -1,5 +1,5 @@
 ﻿using AdminPortal.Data.Data;
-using AdminPortal.Common.Models;
+using AdminPortal.Common.Models.CoursesViewModels;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
@@ -68,6 +68,12 @@ namespace AdminPortal.CoreBusiness.Repositories.Implementation
         {
             var courseFileAttachment = await _dbContext.CourseFileAttachments.FirstOrDefaultAsync(x => x.Id == courseFileAttachmentId);
             _dbContext.CourseFileAttachments.Remove(courseFileAttachment);
+        }
+
+        public async Task<int> GetTotalNumberOfCourseFiles()
+        {
+           var totalNumberOfCourseFiles = await _dbContext.CourseFileAttachments.CountAsync();
+            return totalNumberOfCourseFiles;
         }
     }
 }

@@ -1,17 +1,19 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using AdminPortal.Common.Models.CoursesViewModels;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 
-namespace AdminPortal.Common.Models
+namespace AdminPortal.Common.Models.CoursesViewModels
 {
     public class CoursesVM
     {
         public int Id { get; set; }
         [Display(Name = "Course Name")]
         public string? CourseName { get; set; }
+
         [Display(Name = "Select course category")]
         public int? CourseCategoryId { get; set; }
 
-        //For course update
+        //For course update only
         public SelectList? CourseCategories { get; set; }
 
         public virtual CourseCategoryVM? CourseCategory { get; set; }

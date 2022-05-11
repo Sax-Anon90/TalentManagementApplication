@@ -1,5 +1,12 @@
 ﻿@model CoursesAndCourseCategoriesVM
 
+@inject IUnitOfWork _unitOfWork
+
+@{
+    var totalNumberOfCourses = await _unitOfWork.CoursesRepository.GetTotalNumberOfCourses();
+    var totalNumberOfCourseCategories = await _unitOfWork.CourseCategoriesRepository.GetTotalNoOfCourseCategories();
+    var totalNumberOfCourseFiles = await _unitOfWork.CourseFileAttachmentsRepository.GetTotalNumberOfCourseFiles();
+}
 <br />
 @if (TempData["AddNewCourseFailed"] != null)
 {
@@ -88,59 +95,52 @@
                 <!-- small box -->
                 <div class="small-box bg-info">
                     <div class="inner">
-                        <h3>150</h3>
+                        <h3>@totalNumberOfCourses</h3>
                         <p>Total Courses</p>
                     </div>
                     <div class="icon">
-                        <i class="ion ion-bag"></i>
+                        <i class="fa fa-graduation-cap"></i>
                     </div>
+                    <a href="#" class="small-box-footer">Downlaod to Excel <i class="fa fa-download"></i></a>
                 </div>
             </div>
-            <!-- ./col -->
             <div class="col-lg-3 col-6">
-                <!-- small box -->
-                <div class="small-box bg-success">
+                <div class="small-box bg-danger">
                     <div class="inner">
-                        <h3>53<sup style="font-size: 20px">%</sup></h3>
+                        <h3>@totalNumberOfCourseCategories</h3>
                         <p>Total course categories</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fa fa-list"></i>
+                    </div>
+                    <a href="#" class="small-box-footer">Downlaod to Excel <i class="fa fa-download"></i></a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-warning">
+                    <div class="inner">
+                        <h3>@totalNumberOfCourseCategories</h3>
+                        <p>Total enrollments</p>
                     </div>
                     <div class="icon">
                         <i class="ion ion-stats-bars"></i>
                     </div>
+                    <a href="#" class="small-box-footer">More info</a>
                 </div>
             </div>
-            <!-- ./col -->
-            @* <div class="col-lg-3 col-6">
-                <!-- small box -->
-                <div class="small-box bg-warning">
-                <div class="inner">
-                <h3>44</h3>
-
-                <p>User Registrations</p>
-                </div>
-                <div class="icon">
-                <i class="ion ion-person-add"></i>
-                </div>
-                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                </div>
-                </div>*@
-            <!-- ./col -->
             <div class="col-lg-3 col-6">
-                <!-- small box -->
-                <div class="small-box bg-danger">
+                <div class="small-box bg-primary">
                     <div class="inner">
-                        <h3>65</h3>
-
-                        <p>Unique Visitors</p>
+                        <h3>@totalNumberOfCourseFiles</h3>
+                        <p>Total course content files</p>
                     </div>
                     <div class="icon">
-                        <i class="ion ion-pie-graph"></i>
+                        <i class="ion ion-stats-bars"></i>
                     </div>
+                    <a href="#" class="small-box-footer">More info</a>
                 </div>
             </div>
-            <!-- ./col -->
         </div>
-
     </div>
 </section>
 
@@ -201,15 +201,15 @@
             <br />
             <br />
             <br />
+            <div id=CourseDetailsPlaceHolderHere></div>
+            <div id=UpdateCoursePlaceHolderHere></div>
             <div class="table-responsive">
-                <div id=CourseDetailsPlaceHolderHere></div>
-                <div id=UpdateCoursePlaceHolderHere></div>
-                <table class="table table-striped" style="width:100%">
+                <table class="table table-striped" style="width:100%" id="coursesTable">
                     <thead style="background-color:#333130;">
                         <tr>
                             <th style="color:white;">Course Name</th>
                             <th style="color:white;">Category</th>
-                            <th style="color:white;">Course Content</th>
+                            <th style="color:white;">Course content File</th>
                             <th style="color:white;">Actions</th>
                         </tr>
                     </thead>
@@ -293,7 +293,7 @@
             <div class="table-responsive">
                 <div id="CourseCategoryDetailsPlaceHolderHere"></div>
                 <div id="CourseCategoryUpdatePlaceHolderHere"></div>
-                <table class="table table-striped" style="width:100%">
+                <table class="table table-striped" style="width:100%" id="CourseCategoryTable">
                     <thead style="background-color:#333130;">
                         <tr>
                             <th style="color:white;">Category Name</th>
@@ -330,119 +330,3 @@
         </div>
     </div>
 </div>
-
-@*<div class="card-body text-primary">
-    <br />
-    <form asp-action="Search" id="searchForm">
-    <div class="row mb-4">
-    <div class="col-4">
-    <div class="form-outline">
-    <label style="color:black">
-    <strong>EmployeeNo</strong>
-    <i class="fas fa-id-card"></i>
-    </label>
-    <input placeholder="Employee Number" class="form-control" />
-    </div>
-    </div>
-    <div class="col-4">
-    <div class="form-outline">
-    <label style="color:black">
-    <strong>First Name</strong>
-    <i class="fa fa-user"></i>
-    </label>
-    <input placeholder="First Name" id="form6Example2" class="form-control" />
-    </div>
-    </div>
-    <div class="col-4">
-    <div class="form-outline">
-    <label style="color:black">
-    <strong>Last Name</strong>
-    <i class="fa fa-user"></i>
-    </label>
-    <input placeholder="Last Name" id="form6Example2" class="form-control" />
-    </div>
-    </div>
-    </div>
-    <div class="row mb-4 p-2">
-    <div class="col-4">
-    <div class="form-outline">
-    <label style="color:black">
-    <strong>Gender</strong>
-    <i class="fa fa-transgender-alt"></i>
-    </label>
-    <select class="form-select">
-    <option>All</option>
-    </select>
-    </div>
-    </div>
-    <div class="col-4">
-    <div class="form-outline">
-    <label style="color:black">
-    <strong>Race</strong>
-    <i class="fa fa-user"></i>
-    </label>
-    <select class="form-select">
-    <option>All</option>
-    </select>
-    </div>
-    </div>
-    <div class="col-4">
-    <div class="form-outline">
-    <label style="color:black">
-    <strong>Grade</strong>
-    <i class="fa fa-sitemap"></i>
-    </label>
-    <select class="form-select">
-    </select>
-    </div>
-    </div>
-    </div>
-    <div class="row mb-4 p-2">
-    <div class="col-4">
-    <div class="form-outline">
-    <label style="color:black">
-    <strong>Site</strong>
-    <i class="fa fa-sitemap"></i>
-    </label>
-    <select class="form-select">
-    <option>All</option>
-    </select>
-    </div>
-    </div>
-    <div class="col-4">
-    <div class="form-outline">
-    <label style="color:black">
-    <strong>Division</strong>
-    <i class="fa fa-sitemap"></i>
-    </label>
-    <select class="form-select">
-    <option>All</option>
-    </select>
-    </div>
-    </div>
-    <div class="col-4">
-    <div class="form-outline">
-    <label style="color:black">
-    <strong>Training Date</strong>
-    <i class="fa fa-calendar"></i>
-    </label>
-    <input type="text" />
-    </div>
-    </div>
-    </div>
-    <div class="form-check d-flex mb-4">
-    <input class="form-check-input me-2" type="checkbox" value="" id="form6Example8" checked />
-    <label class="form-check-label" for="form6Example8"> Active Employees Only </label>
-    </div>
-    <div class="form-check d-flex mb-4" style="float:right">
-    <input type="checkbox" name="downloadCSV" id="downloadCSV" class="form-check-input me-2" />
-    <label class="form-check-label">Save result to file</label>
-    </div>
-    <br />
-    <br />
-    <button type="submit" onclick="searchSubmit()" id="submitButton" class="btn btn-primary btn-lg" style="float:right">
-    <i class="fa fa-search"></i> Search
-    </button>
-    <br />
-    </form>
-    </div>*@

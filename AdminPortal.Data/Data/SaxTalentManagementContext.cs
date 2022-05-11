@@ -24,10 +24,7 @@ namespace AdminPortal.Data.Data
         public virtual DbSet<Employee> Employees { get; set; } = null!;
         public virtual DbSet<EmployeeFileAttachment> EmployeeFileAttachments { get; set; } = null!;
         public virtual DbSet<Gender> Genders { get; set; } = null!;
-        public virtual DbSet<Race> Races { get; set; } = null!;
-        public virtual DbSet<Region> Regions { get; set; } = null!;
         public virtual DbSet<Role> Roles { get; set; } = null!;
-        public virtual DbSet<Title> Titles { get; set; } = null!;
         public virtual DbSet<User> Users { get; set; } = null!;
         public virtual DbSet<UserRole> UserRoles { get; set; } = null!;
 
@@ -103,39 +100,17 @@ namespace AdminPortal.Data.Data
 
             modelBuilder.Entity<Employee>(entity =>
             {
-                entity.Property(e => e.BirthDate).HasColumnType("datetime");
-
                 entity.Property(e => e.Department).HasMaxLength(250);
 
-                entity.Property(e => e.Email).HasMaxLength(250);
-
                 entity.Property(e => e.EmployeeNo).HasMaxLength(250);
-
-                entity.Property(e => e.EndDate).HasColumnType("datetime");
 
                 entity.Property(e => e.FirstName).HasMaxLength(250);
 
                 entity.Property(e => e.Gender).HasMaxLength(250);
 
-                entity.Property(e => e.HighestQualification).HasMaxLength(250);
-
                 entity.Property(e => e.LastName).HasMaxLength(250);
 
-                entity.Property(e => e.Location).HasMaxLength(250);
-
                 entity.Property(e => e.PositionTitle).HasMaxLength(250);
-
-                entity.Property(e => e.Race).HasMaxLength(250);
-
-                entity.Property(e => e.Region).HasMaxLength(250);
-
-                entity.Property(e => e.ReportsToManager).HasMaxLength(250);
-
-                entity.Property(e => e.StartDate).HasColumnType("datetime");
-
-                entity.Property(e => e.Title).HasMaxLength(250);
-
-                entity.Property(e => e.University).HasMaxLength(250);
             });
 
             modelBuilder.Entity<EmployeeFileAttachment>(entity =>
@@ -162,38 +137,11 @@ namespace AdminPortal.Data.Data
                     .HasColumnName("Gender");
             });
 
-            modelBuilder.Entity<Race>(entity =>
-            {
-                entity.ToTable("Race");
-
-                entity.Property(e => e.Race1)
-                    .HasMaxLength(250)
-                    .HasColumnName("Race");
-            });
-
-            modelBuilder.Entity<Region>(entity =>
-            {
-                entity.ToTable("Region");
-
-                entity.Property(e => e.Region1)
-                    .HasMaxLength(250)
-                    .HasColumnName("Region");
-            });
-
             modelBuilder.Entity<Role>(entity =>
             {
                 entity.ToTable("ROLES");
 
                 entity.Property(e => e.RoleName).HasMaxLength(250);
-            });
-
-            modelBuilder.Entity<Title>(entity =>
-            {
-                entity.ToTable("Title");
-
-                entity.Property(e => e.Title1)
-                    .HasMaxLength(20)
-                    .HasColumnName("Title");
             });
 
             modelBuilder.Entity<User>(entity =>

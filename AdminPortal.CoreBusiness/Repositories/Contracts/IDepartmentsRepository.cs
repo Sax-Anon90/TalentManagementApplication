@@ -1,4 +1,4 @@
-﻿using AdminPortal.Common.Models;
+﻿using AdminPortal.Common.Models.CoursesViewModels;
 
 namespace AdminPortal.CoreBusiness.Repositories.Contracts
 {

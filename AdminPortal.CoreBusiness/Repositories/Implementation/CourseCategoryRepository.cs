@@ -1,10 +1,10 @@
 ﻿
 using AdminPortal.CoreBusiness.Repositories.Contracts;
-using AdminPortal.Common.Models;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using AdminPortal.Data.Data;
+using AdminPortal.Common.Models.CoursesViewModels;
 
 namespace AdminPortal.CoreBusiness.Repositories.Implementation
 {
@@ -65,6 +65,12 @@ namespace AdminPortal.CoreBusiness.Repositories.Implementation
         {
             var courseCategory = await _dbContext.CourseCategories.FirstOrDefaultAsync(x => x.Id == courseCategoryId);
             _dbContext.CourseCategories.Remove(courseCategory); 
+        }
+
+        public async Task<int> GetTotalNoOfCourseCategories()
+        {
+            var totalCourseCategories = await _dbContext.CourseCategories.CountAsync();
+            return totalCourseCategories;
         }
     }
 }

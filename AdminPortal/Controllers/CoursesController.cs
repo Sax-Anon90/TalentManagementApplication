@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using AdminPortal.Common.Models;
 using AdminPortal.CoreBusiness.Repositories.Contracts;
+using AdminPortal.Common.Models.CoursesViewModels;
 
 namespace AdminPortal.UI.Controllers
 {

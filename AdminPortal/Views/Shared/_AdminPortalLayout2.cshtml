@@ -4,13 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>AdminLTE 3 | Dashboard</title>
-
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/lib/font-awesome/css/all.css" />
     <link rel="stylesheet" href="~/lib/font-awesome/css/fontawesome.css" />
     <link href="~/lib/limonte-sweetalert2/sweetalert2.min.css" />
     <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.3/css/bootstrap.min.css" />
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Ionicons -->
@@ -63,7 +62,7 @@
                         <!-- Add icons to the links using the .nav-icon class
                              with font-awesome or any other icon font library -->
                         <li class="nav-item menu-open">
-                            <a href="#" class="nav-link active">
+                            <a asp-controller="Home" asp-action="Index" class="nav-link">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
                                     Home
@@ -71,16 +70,16 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-table"></i>
+                            <a asp-controller="Employees" asp-action="Index" class="nav-link">
+                                <i class="fa fa-users"></i>
                                 <p>
-                                    Employee Search
+                                    Employee Management
                                 </p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a asp-controller="Courses" asp-action="Index" class="nav-link">
-                                <i class="nav-icon fas fa-search"></i>
+                                <i class="fa fa-graduation-cap"></i>
                                 <p>
                                     Course Management
                                 </p>
@@ -105,6 +104,7 @@
         <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
         <script src="/js/GeneralApplicationScript.js"></script>
         <script src="/js/CourseAndCourseCategoryScript.js"></script>
+        <script src ="/js/EmployeeAndEmployeeTrainingScript.js"></script>
         <script>
             $.widget.bridge('uibutton', $.ui.button)
         </script>

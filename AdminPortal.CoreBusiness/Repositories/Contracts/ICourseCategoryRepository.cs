@@ -1,5 +1,5 @@
 ﻿
-using AdminPortal.Common.Models;
+using AdminPortal.Common.Models.CoursesViewModels;
 
 namespace AdminPortal.CoreBusiness.Repositories.Contracts
 {
@@ -10,5 +10,6 @@ namespace AdminPortal.CoreBusiness.Repositories.Contracts
         Task<CourseCategoryVM> GetCourseCategoryDetails(int courseCategoryId); 
         Task UpdateCourseCategory(CourseCategoryVM courseCategoryVM);
         Task DeleteCourseCategory(int courseCategoryId);
+        Task<int> GetTotalNoOfCourseCategories();
     }
 }

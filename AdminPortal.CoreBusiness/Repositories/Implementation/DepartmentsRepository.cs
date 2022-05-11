@@ -1,5 +1,5 @@
 ﻿using AdminPortal.Data.Data;
-using AdminPortal.Common.Models;
+using AdminPortal.Common.Models.CoursesViewModels;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;

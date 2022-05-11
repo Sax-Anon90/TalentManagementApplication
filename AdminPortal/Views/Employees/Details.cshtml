@@ -1,126 +1,167 @@
-﻿@model AdminPortal.Data.Data.Employee
+﻿@model EmployeeDetailsAndEmployeeFilesVM
 
-@{
-    ViewData["Title"] = "Details";
-}
+<br />
 
-<h1>Details</h1>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-info">
+                    <div class="inner">
+                        <h3>10</h3>
+                        <p>Total Employee Files</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fa fa-graduation-cap"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-danger">
+                    <div class="inner">
+                        <h3>0</h3>
+                        <p>Total Courses Enrolled</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fa fa-list"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
-<div>
-    <h4>Employee</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.EmployeeNo)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.EmployeeNo)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FirstName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FirstName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.LastName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.LastName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Department)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Department)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Location)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Location)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.StartDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.StartDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.EndDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.EndDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.BirthDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.BirthDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Age)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Age)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Race)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Race)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Gender)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Gender)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Region)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Region)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ReportsToManager)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ReportsToManager)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PositionTitle)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PositionTitle)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.University)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.University)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.HighestQualification)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.HighestQualification)
-        </dd>
-    </dl>
+<div class="card border border-dark">
+    <div class="card-header bg-success" style="color:white">
+        <h3>
+            Employee Details
+            <i class="fas fa-id-card"></i>
+        </h3>
+    </div>
+    <div class="card-body text-primary">
+        <div class="row">
+            <div class="col-4">
+                <label style="color:black; font-size:Large;">
+                    <strong>@Html.DisplayNameFor(model => model.EmployeeDetails.EmployeeNo)</strong>
+                </label>
+                <p style="color:black">@Html.DisplayFor(model => model.EmployeeDetails.EmployeeNo)</p>
+            </div>
+            <div class="col-4">
+                <label style="color:black; font-size:Large;">
+                    <strong>@Html.DisplayNameFor(model => model.EmployeeDetails.FirstName)</strong>
+                </label>
+                <p style="color:black">@Html.DisplayFor(model => model.EmployeeDetails.FirstName)</p>
+            </div>
+            <div class="col-4">
+                <label style="color:black; font-size:Large;">
+                    <strong>@Html.DisplayNameFor(model => model.EmployeeDetails.LastName)</strong>
+                </label>
+                <p style="color:black">@Html.DisplayFor(model => model.EmployeeDetails.LastName)</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <label style="color:black; font-size:Large;">
+                    <strong>@Html.DisplayNameFor(model => model.EmployeeDetails.Gender)</strong>
+                </label>
+                <p style="color:black">@Html.DisplayFor(model => model.EmployeeDetails.Gender)</p>
+            </div>
+            <div class="col-4">
+                <label style="color:black; font-size:Large;">
+                    <strong>@Html.DisplayNameFor(model => model.EmployeeDetails.Department)</strong>
+                </label>
+                <p style="color:black">@Html.DisplayFor(model => model.EmployeeDetails.Department)</p>
+            </div>
+            <div class="col-4">
+                <label style="color:black; font-size:Large;">
+                    <strong>@Html.DisplayNameFor(model => model.EmployeeDetails.PositionTitle)</strong>
+                </label>
+                <p style="color:black">@Html.DisplayFor(model => model.EmployeeDetails.PositionTitle)</p>
+            </div>
+        </div>
+    </div>
+    <br />
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+<br />
+
+<div class="card border border-dark p-1">
+    <div class="card-header bg-success" style="color:white"><h3>Employee Files and Enrollments <i class="fa fa-users"></i></h3></div>
+    <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <button class="nav-link active" id="nav-User-tab" data-bs-toggle="tab" data-bs-target="#nav-User" type="button" role="tab" aria-controls="nav-User" aria-selected="true"><strong>Files</strong></button>
+            <button class="nav-link" id="nav-Role-tab" data-bs-toggle="tab" data-bs-target="#nav-Role" type="button" role="tab" aria-controls="nav-Role" aria-selected="false"><strong>enrollments</strong></button>
+        </div>
+    </nav>
+    <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="nav-User" role="tabpanel" aria-labelledby="nav-User-tab">
+            <br />
+            @if (Model.EmployeeFileAttachmentsVM.Count() == 0)
+            {
+                <div class="alert alert-danger">
+                    There are no files for this employee
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-striped" style="width:100%" id="coursesTable">
+                        <thead style="background-color:#333130;">
+                            <tr>
+                                <th style="color:white;">File Name</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var file in Model.EmployeeFileAttachmentsVM)
+                            {
+                                <tr>
+                                    <td>@file.FileName</td>
+                                    <td>
+                                        <button type="button" data-bs-toggle="modal viewModel" data-bs-target="#courseDetails"
+                                        class="btn btn-info" style="float:left;margin-left:10px;">
+                                            <i class="fa fa-download"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-danger  DeleteCoursebtn" style="float:left;margin-left:10px;">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <form asp-controller="Courses" asp-action="DeleteCourse" id="DeleteCourseForm">
+                    <input type="hidden" id="Id" name="Id">
+                </form>
+            }
+        </div>
+        <div class="tab-pane fade" id="nav-Role" role="tabpanel" aria-labelledby="nav-Role-tab">
+            <br />
+            <table class="table table-striped" style="width:100%" id="EmployeesTable">
+                <thead style="background-color:#333130;">
+                    <tr>
+                        <th style="color:white;">
+                            course name
+                        </th>
+                        <th style="color:white;">
+                            category
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var course in Model.EmployeeCourseEnrollmentsVM)
+                    {
+                        <tr>
+                            <td>@course.Course.CourseName</td>
+                            <td>@course.Course.CourseCategory.CategoryName</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+    </div>
 </div>
+
+

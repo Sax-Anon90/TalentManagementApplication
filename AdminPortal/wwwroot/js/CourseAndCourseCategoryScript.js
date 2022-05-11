@@ -44,7 +44,7 @@ $(function () {
 
 $(function () {
     var PlaceHolderElement = $('#CourseDetailsPlaceHolderHere');
-    $('button[data-bs-toggle="modal viewModel"]').click(function (event) {
+    $('body').on('click', 'button[data-bs-toggle="modal viewModel"]', function (event) {
         var url = $(this).data('url');
         $.get(url).done(function (data) {
             PlaceHolderElement.html(data);
@@ -55,7 +55,7 @@ $(function () {
 
 $(function () {
     var PlaceHolderElement = $('#UpdateCoursePlaceHolderHere');
-    $('button[data-bs-toggle="modal updateModal"]').click(function (event) {
+    $('body').on('click', 'button[data-bs-toggle="modal updateModal"]', function (event) {
         var url = $(this).data('url');
         $.get(url).done(function (data) {
             PlaceHolderElement.html(data);
@@ -104,7 +104,7 @@ $(function () {
 });
 
 $(function () {
-    $(document).on('click', '.DeleteCoursebtn', function (event) {
+    $(document).on('click', '.DeleteCoursebtn', function () {
         swal.fire({
             title: "Are you sure?",
             text: "Are you sure you want to delete this course?",
@@ -142,7 +142,7 @@ function AddNewCourseCategory() {
 
 $(function () {
     var PlaceHolderElement = $('#CourseCategoryUpdatePlaceHolderHere');
-    $('button[data-bs-toggle="modal update"]').click(function (event) {
+    $("body").on('click', 'button[data-bs-toggle="modal update"]', function (e) {
         var url = $(this).data('url');
         $.get(url).done(function (data) {
             PlaceHolderElement.html(data);
@@ -153,7 +153,7 @@ $(function () {
 
 $(function () {
     var PlaceHolderElement = $('#CourseCategoryDetailsPlaceHolderHere');
-    $('button[data-bs-toggle="modal viewModal"]').click(function (event) {
+    $("body").on('click', 'button[data-bs-toggle="modal viewModal"]', function (e) {
         var url = $(this).data('url');
         $.get(url).done(function (data) {
             PlaceHolderElement.html(data);

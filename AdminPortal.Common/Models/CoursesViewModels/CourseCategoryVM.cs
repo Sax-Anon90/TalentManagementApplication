@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace AdminPortal.Common.Models
+namespace AdminPortal.Common.Models.CoursesViewModels
 {
     public class CourseCategoryVM
     {

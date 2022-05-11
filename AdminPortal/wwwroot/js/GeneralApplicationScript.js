@@ -1,5 +1,7 @@
 ﻿$(function () {
-    $('.table').DataTable();
-
+    $('#CourseCategoryTable').DataTable();
+    $('#coursesTable').DataTable();
+    $('#EmployeesTable').DataTable();
+    $('#CourseEnrolTable').DataTable();
 });
 

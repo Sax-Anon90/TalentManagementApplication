@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace AdminPortal.Common.Models
+namespace AdminPortal.Common.Models.CoursesViewModels
 {
     public class CourseFileAttachmentVM
     {

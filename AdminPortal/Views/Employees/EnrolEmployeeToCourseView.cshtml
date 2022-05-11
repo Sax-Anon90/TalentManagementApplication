@@ -1,0 +1,38 @@
+﻿@model CourseEnrollmentsVM
+
+@inject IUnitOfWork _unitOfWork
+
+@{
+    var employee = _unitOfWork.EmployeeRepository.GetEmployeeDetails(@Model.EmployeeId);
+}
+<br />
+
+<div class="card border border-dark p-1">
+    <div class="card-header bg-success" style="color:white"><h3>Select course <i class="fa fa-graduation-cap"></i></h3></div>
+    <br />
+    <form asp-controller="Employees" asp-action="EnrolEmployeeToCourse"
+          asp-route-employeeId="@Model.EmployeeId">
+        <table class="table table-striped" width="100%" id="CourseEnrolTable">
+            <thead style="background-color:#333130;">
+                <tr>
+                    <th style="color:white;">courses</th>
+                    <th style="color:white;">Select</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var course in Model.CoursesNotEnrolledByEmployee)
+                {
+                    <tr>
+                        <td>@course</td>
+                        <td>@Html.CheckBoxFor(model => model.CoursesToEnrol[course])</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <br />
+        <button type="submit" class="btn btn-info btn-block" style="float:right;">
+            <i class="fa fa-graduation-cap"></i> Enrol
+        </button>
+    </form>
+</div>
