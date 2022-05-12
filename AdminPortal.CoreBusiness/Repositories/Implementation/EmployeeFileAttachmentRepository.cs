@@ -24,7 +24,13 @@ namespace AdminPortal.CoreBusiness.Repositories.Implementation
             this._mapper = _mapper;
             this._configurationProvider = _configurationProvider;
         }
-
+        public async Task<EmployeeFileAttachmentsVM> GetEmployeeFileAttachment(int Id)
+        {
+            var employeeFileAttachment = await _dbContext.EmployeeFileAttachments
+                .ProjectTo<EmployeeFileAttachmentsVM>(_configurationProvider)
+                .FirstOrDefaultAsync(x => x.Id == Id);
+            return employeeFileAttachment;
+        }
         public async Task<ICollection<EmployeeFileAttachmentsVM>> GetAllEmployeeFileAttachmentsById(int employeeId)
         {
             var employeeFileAttachments = await _dbContext.EmployeeFileAttachments
@@ -56,5 +62,25 @@ namespace AdminPortal.CoreBusiness.Repositories.Implementation
                 return false;
             }
         }
+        public async Task DeleteEmployeeFileAttachment(int employeeFileAttachmentId)
+        {
+            var employeeFileAttachment = await _dbContext.EmployeeFileAttachments.FirstOrDefaultAsync(x => x.Id == employeeFileAttachmentId);
+            _dbContext.EmployeeFileAttachments.Remove(employeeFileAttachment);
+        }
+
+        public async Task<int> GetTotalNumberOfEmployeeFiles(int employeeId)
+        {
+            var totalNumberOfEmployeeFiles = await _dbContext.EmployeeFileAttachments
+                .Where(x => x.EmployeeId == employeeId).CountAsync();
+            return totalNumberOfEmployeeFiles;
+        }
+
+        public async Task<int> GetTotalOfAllEmployeeFiles()
+        {
+            var totalFiles = await _dbContext.EmployeeFileAttachments.CountAsync();
+            return totalFiles;
+        }
+
+
     }
 }

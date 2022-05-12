@@ -22,12 +22,13 @@ function AddNewCourse() {
 
 var courseId;
 $(function () {
-    $('.CourseFileAttachmentData').hover(function (event) {
+    $(document).on('mouseenter', '.CourseFileAttachmentData', function (event) {
         var btn = $(this);
         courseId = btn.attr('data-courseId');
         $('#courseId').val(courseId);
     });
 });
+
 $(function () {
     $('.courseAttatchmentFileData').change(function (event) {
         swal.fire({

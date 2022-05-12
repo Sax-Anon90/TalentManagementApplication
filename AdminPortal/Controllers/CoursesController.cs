@@ -64,7 +64,7 @@ namespace AdminPortal.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<PartialViewResult> CourseDetailsPopUpView(int? courseId)
+        public async Task<IActionResult> CourseDetailsView(int? courseId)
         {
             var courseDetails = await _unitOfWork.CoursesRepository.GetCourseDetails(courseId);
             var courseFileAttachments = await _unitOfWork.CourseFileAttachmentsRepository.GetAllCourseFileAttachmentsById(courseId);
@@ -73,9 +73,10 @@ namespace AdminPortal.UI.Controllers
                 CourseDetails = courseDetails,
                 CourseFileAttachments = courseFileAttachments
             };
-            return PartialView("_CourseDetailsPopUpViewModal", CourseDetailsAndCourseFiles);
+            return View("CourseDetailsView", CourseDetailsAndCourseFiles);
         }
-        public async Task<IActionResult> DownloadCourseFileAttachment(int Id)
+        [HttpGet]
+        public async Task<FileResult> DownloadCourseFileAttachment(int Id)
         {
             var courseFileAttachment = await _unitOfWork.CourseFileAttachmentsRepository.GetCourseFileAttachment(Id);
             var fileName = courseFileAttachment.FileName;
@@ -110,7 +111,7 @@ namespace AdminPortal.UI.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken]  
         public async Task<IActionResult> DeleteCourseFileAttachment(int courseFileAttachmentId)
         {
             await _unitOfWork.CourseFileAttachmentsRepository.DeleteCourseFileAttachment(courseFileAttachmentId);
@@ -125,8 +126,8 @@ namespace AdminPortal.UI.Controllers
         {
             await _unitOfWork.CoursesRepository.DeleteCourse(Id);
             await _unitOfWork.SaveChangesAsync();
-            TempData["CourseDeleteSuccess"] = "Course Successfully Deleted";
-            return RedirectToAction(nameof(Index), "Courses");
+                TempData["CourseDeleteSuccess"] = "Course Successfully Deleted";
+                return RedirectToAction(nameof(Index), "Courses");
         }
 
         [HttpPost]

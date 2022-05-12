@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AdminPortal.Common.Models.EmployeesViewModels
 {
-    public class EmployeeFileAttachmentsVM
+    public class EmployeeFileAttachmentsVM : BaseViewModel.BaseViewModel
     {
         public int Id { get; set; }
         [Display(Name="File Name")]

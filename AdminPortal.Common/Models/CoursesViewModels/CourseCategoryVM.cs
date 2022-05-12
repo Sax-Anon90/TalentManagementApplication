@@ -1,10 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using AdminPortal.Common.Models.BaseViewModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace AdminPortal.Common.Models.CoursesViewModels
 {
-    public class CourseCategoryVM
+    public class CourseCategoryVM : BaseViewModel.BaseViewModel
     {
-        public int Id { get; set; }
         [Display(Name = "Category Name")]
         public string? CategoryName { get; set; }
 

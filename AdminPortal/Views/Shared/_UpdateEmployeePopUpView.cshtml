@@ -1,0 +1,76 @@
+﻿@model EmployeeVM
+
+@inject IUnitOfWork _unitOfWork
+
+@{
+    var Genders = await _unitOfWork.GenderRepository.GetAllGenders();
+    var Departments = await _unitOfWork.DepartmentsRepository.GetAllDepartments();
+}
+
+<div class="modal fade" id="UpdateEmployeeModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add new Course</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form asp-controller="Employees" asp-action="UpdateEmployee">
+                    <input asp-for="Id" type="hidden" />
+                    <label style="color:black" class="col-form-label">
+                        <strong>
+                            @Html.DisplayNameFor(model => model.EmployeeNo) (Required)
+                        </strong>
+                    </label>
+                    <input asp-for="EmployeeNo" class="form-control">
+                    <label style="color:black" class="col-form-label">
+                        <strong>
+                            @Html.DisplayNameFor(model => model.FirstName) (Required)
+                        </strong>
+                    </label>
+                    <input asp-for="FirstName" class="form-control">
+                    <label style="color:black" class="col-form-label">
+                        <strong>
+                            @Html.DisplayNameFor(model => model.LastName) (Required)
+                        </strong>
+                    </label>
+                    <input asp-for="LastName" class="form-control">
+                    <label style="color:black" class="col-form-label">
+                        <strong>
+                            @Html.DisplayNameFor(model => model.Gender) (Required)
+                        </strong>
+                    </label>
+                    <select asp-for="Gender" class="form-select">
+                        <option disabled>--Select Gender--</option>
+                        @foreach (var gender in Genders)
+                        {
+                            <option>@gender.Gender1</option>
+                        }
+                    </select>
+                    <label style="color:black" class="col-form-label">
+                        <strong>
+                            @Html.DisplayNameFor(model => model.Department) (Required)
+                        </strong>
+                    </label>
+                    <select asp-for="Department" class="form-select">
+                        <option disabled>--Select Department--</option>
+                        @foreach (var department in Departments)
+                        {
+                            <option>@department.Department1</option>
+                        }
+                    </select>
+                    <label style="color:black" class="col-form-label">
+                        <strong>
+                            @Html.DisplayNameFor(model => model.PositionTitle) (Required)
+                        </strong>
+                    </label>
+                    <input asp-for="PositionTitle" class="form-control">
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" onclick="UpdateEmployee()" class="btn btn-primary">update Employee</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -12,5 +12,9 @@ namespace AdminPortal.CoreBusiness.Repositories.Contracts
         Task<ICollection<CourseEnrollmentsVM>> GetAllEmployeeCourseEnrollments(int? employeeId);
         Task<bool> EnrolEmployeeToCourse(int employeeId, CourseEnrollmentsVM courseEnrollmentsVM);
         Task<CourseEnrollmentsVM> GetCoursesNotEnrolledByEmployee(int? employeeId);
+        Task<int> GetTotalNumberOfCoursesEnrolledByEmployee(int employeeId);
+        Task<int> GetTotalOfAllEnrollments();
+
+        Task UnenrollEmployeeFromCourse(int courseEnrollmentId);
     }
 }

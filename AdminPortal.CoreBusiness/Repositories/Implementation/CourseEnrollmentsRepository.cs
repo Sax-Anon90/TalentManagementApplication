@@ -30,6 +30,7 @@ namespace AdminPortal.CoreBusiness.Repositories.Implementation
         {
             var allCourses = await _coursesRepository.GetAllCourses();
             var courseEnrollments = GetAllEmployeeCourseEnrollments(employeeId);
+
             /*
               From all the courses in the courses table, select only the one's the employee has not yet enrolled in
              */
@@ -37,7 +38,7 @@ namespace AdminPortal.CoreBusiness.Repositories.Implementation
                 .Where(x => !courseEnrollments.Result.Select(x => x.Course.CourseName).Any(y => x.Contains(y)));
 
             //This means the employee has enrolled in all courses
-            if (coursesNotEnrolledByEmployee.Count() is 0)
+            if (coursesNotEnrolledByEmployee.Count() is 0 || coursesNotEnrolledByEmployee is null)
             {
                 return null;
             }
@@ -70,6 +71,7 @@ namespace AdminPortal.CoreBusiness.Repositories.Implementation
             {
                 return false;
             }
+
             /*
               From the courses the user selected, get all the courses from the courses table
               and only get the ones the user selected so that we can get the Ids of those courses
@@ -90,6 +92,28 @@ namespace AdminPortal.CoreBusiness.Repositories.Implementation
             var EmployeeCourseEnrollments = _mapper.Map<ICollection<CourseEnrollment>>(coursesToEnrolToEmployee);
             await _dbContext.CourseEnrollments.AddRangeAsync(EmployeeCourseEnrollments);
             return true;
+        }
+
+        public async Task<int> GetTotalNumberOfCoursesEnrolledByEmployee(int employeeId)
+        {
+            var totalNoOfCoursesEnrolled = await _dbContext.CourseEnrollments
+                 .Where(x => x.EmployeeId == employeeId).CountAsync();
+            return totalNoOfCoursesEnrolled;
+        }
+
+        public async Task<int> GetTotalOfAllEnrollments()
+        {
+            var totalEnrollments = await _dbContext.CourseEnrollments.CountAsync();
+            return totalEnrollments;
+        }
+
+        public async Task UnenrollEmployeeFromCourse(int courseEnrollmentId)
+        {
+            var CourseEnrollment = await _dbContext.CourseEnrollments.Where(x => x.Id == courseEnrollmentId)
+                .Include(x => x.Course)
+                .Include(x => x.Employee)
+                .FirstOrDefaultAsync();
+            _dbContext.CourseEnrollments.Remove(CourseEnrollment);
         }
     }
 }

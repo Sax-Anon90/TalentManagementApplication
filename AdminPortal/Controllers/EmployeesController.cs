@@ -14,16 +14,14 @@ namespace AdminPortal.UI.Controllers
 {
     public class EmployeesController : Controller
     {
-        private readonly SaxTalentManagementContext _context;
         private readonly IUnitOfWork _unitOfWork;
 
-        public EmployeesController(SaxTalentManagementContext context, IUnitOfWork _unitOfWork)
+        public EmployeesController(IUnitOfWork _unitOfWork)
         {
-            _context = context;
             this._unitOfWork = _unitOfWork;
         }
 
-        // GET: Employees
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var EmployeesAndEmployeeTrainingModel = new EmployeeAndEmployeeTrainingVM()
@@ -34,10 +32,11 @@ namespace AdminPortal.UI.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddNewEmployee(EmployeeAndEmployeeTrainingVM employeeAndEmployeeTrainingVM)
         {
             var validationResult = employeeAndEmployeeTrainingVM.EmployeeCreateViewModel.Validation();
-            if(validationResult is false)
+            if (validationResult is false)
             {
                 TempData["EmployeeeAddFail"] = "Employee not added. Please ensure that you enter all required details. If the problem persists, contact the systems administrator";
                 return RedirectToAction(nameof(Index), "Employees");
@@ -48,11 +47,12 @@ namespace AdminPortal.UI.Controllers
             return RedirectToAction(nameof(Index), "Employees");
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> UploadEmployeeFileAttachment(EmployeeAndEmployeeTrainingVM employeeAndEmployeeTrainingVM, int employeeId)
         {
             var result = await _unitOfWork.EmployeeFileAttachmentsRepository.UploadEmployeeFileAttachment(employeeAndEmployeeTrainingVM, employeeId);
             await _unitOfWork.SaveChangesAsync();
-            if(result == false)
+            if (result == false)
             {
                 TempData["EmployeeFileUploadFail"] = "Employee File Upload failed. Please ensure that you have entered a valid file. If the problem persists, contact the systems administrator";
                 return RedirectToAction(nameof(Index), "Employees");
@@ -74,11 +74,17 @@ namespace AdminPortal.UI.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> SearchEmployee(EmployeeAndEmployeeTrainingVM employeeAndEmployeeTrainingVM)
         {
+            if (employeeAndEmployeeTrainingVM.EmployeeSearchResult.EmployeeNo is null)
+            {
+                TempData["SearchResultFail"] = "Please enter an employee number";
+                return RedirectToAction(nameof(Index), "Employees");
+            }
             var employeeNo = employeeAndEmployeeTrainingVM.EmployeeSearchResult.EmployeeNo.ToString();
             var searchResult = await _unitOfWork.EmployeeRepository.SearchEmployeeByEmployeeNo(employeeNo);
-            if(searchResult == null)
+            if (searchResult == null)
             {
                 TempData["SearchResultFail"] = "There are no results found. Please try again";
             }
@@ -89,7 +95,7 @@ namespace AdminPortal.UI.Controllers
             var EmployeesAndEmployeeTrainingModel = new EmployeeAndEmployeeTrainingVM()
             {
                 EmployeesViewModel = await _unitOfWork.EmployeeRepository.GetAllEmployees(),
-                EmployeeSearchResult = searchResult 
+                EmployeeSearchResult = searchResult
             };
             return View(nameof(Index), EmployeesAndEmployeeTrainingModel);
         }
@@ -98,15 +104,19 @@ namespace AdminPortal.UI.Controllers
         public async Task<IActionResult> EnrolEmployeeToCourseView(int? employeeId)
         {
             var coursesToEnrol = await _unitOfWork.CoursesEnrollmentsRepository.GetCoursesNotEnrolledByEmployee(employeeId);
-            coursesToEnrol.EmployeeId = employeeId;
-            if(coursesToEnrol == null)
+            if (coursesToEnrol == null)
             {
-                TempData["AllCoursesEnrolled"] = "The employee has enrolled in all courses";
+                TempData["AllCoursesEnrolled"] = "This employee has enrolled in all courses";
+            }
+            else
+            {
+                coursesToEnrol.EmployeeId = employeeId;
             }
             return View("EnrolEmployeeToCourseView", coursesToEnrol);
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> EnrolEmployeeToCourse(int employeeId, CourseEnrollmentsVM courseEnrollmentsVM)
         {
             var result = await _unitOfWork.CoursesEnrollmentsRepository.EnrolEmployeeToCourse(employeeId, courseEnrollmentsVM);
@@ -121,111 +131,78 @@ namespace AdminPortal.UI.Controllers
             return RedirectToAction(nameof(Index), "Employees");
         }
 
-        // GET: Employees/Create
-        public IActionResult Create()
+        [HttpGet]
+        public async Task<PartialViewResult> UpdateEmployeePopUpView(int? employeeId)
         {
-            return View();
+            var employee = await _unitOfWork.EmployeeRepository.GetEmployeeDetails(employeeId);
+            return PartialView("_UpdateEmployeePopUpView", employee);
         }
 
-        // POST: Employees/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,EmployeeNo,FirstName,LastName,Title,Department,Location,StartDate,EndDate,BirthDate,Age,Race,Gender,Email,Region,ReportsToManager,PositionTitle,University,HighestQualification")] Employee employee)
+        public async Task<IActionResult> UpdateEmployee(EmployeeVM employeeUpdateVM)
         {
-            if (ModelState.IsValid)
+            var validationResult = employeeUpdateVM.Valdiation();
+            if (validationResult is false)
             {
-                _context.Add(employee);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                TempData["UpdateEmployeeFail"] = "Employee Update Failed. Please ensure that you enter all required details. If the problem persists, contact the systems administrator";
+                RedirectToAction(nameof(Index), "Employees");
             }
-            return View(employee);
+            await _unitOfWork.EmployeeRepository.UpdateEmployeeDetails(employeeUpdateVM);
+            await _unitOfWork.SaveChangesAsync();
+            TempData["EmplyeeUpdateSuccess"] = "Employee successfully updated";
+            return RedirectToAction(nameof(Index), "Employees");
         }
 
-        // GET: Employees/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        [HttpGet]
+        public async Task<FileResult> DownloadEmployeeFileAttachment(int Id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var employee = await _context.Employees.FindAsync(id);
-            if (employee == null)
-            {
-                return NotFound();
-            }
-            return View(employee);
+            var EmployeeFileAttachment = await _unitOfWork.EmployeeFileAttachmentsRepository.GetEmployeeFileAttachment(Id);
+            var fileName = EmployeeFileAttachment.FileName;
+            var fileType = EmployeeFileAttachment.FileType;
+            var fileContent = EmployeeFileAttachment.FileContent;
+            return File(fileContent, fileType, fileName);
         }
 
-        // POST: Employees/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,EmployeeNo,FirstName,LastName,Title,Department,Location,StartDate,EndDate,BirthDate,Age,Race,Gender,Email,Region,ReportsToManager,PositionTitle,University,HighestQualification")] Employee employee)
+        public async Task<IActionResult> DeleteEmployeeFileAttachment(int employeeFileAttachmentId)
         {
-            if (id != employee.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(employee);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!EmployeeExists(employee.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(employee);
+            await _unitOfWork.EmployeeFileAttachmentsRepository.DeleteEmployeeFileAttachment(employeeFileAttachmentId);
+            await _unitOfWork.SaveChangesAsync();
+            TempData["EmployeeFileDeleteSuccess"] = "Employee File Attachment successfully deleted";
+            return RedirectToAction(nameof(Index), "Employees");
         }
 
-        // GET: Employees/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var employee = await _context.Employees
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (employee == null)
-            {
-                return NotFound();
-            }
-
-            return View(employee);
-        }
-
-        // POST: Employees/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteEmployee(string employeeNo)
         {
-            var employee = await _context.Employees.FindAsync(id);
-            _context.Employees.Remove(employee);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            await _unitOfWork.EmployeeRepository.DeleteEmployee(employeeNo);
+            await _unitOfWork.SaveChangesAsync();
+            TempData["EmployeeDeleteSuccess"] = "Employee Successfully Deleted";
+            return RedirectToAction(nameof(Index), "Employees");
         }
 
-        private bool EmployeeExists(int id)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UnenrollEmployeeFromCourse(int courseEnrollmentId)
         {
-            return _context.Employees.Any(e => e.Id == id);
+            await _unitOfWork.CoursesEnrollmentsRepository.UnenrollEmployeeFromCourse(courseEnrollmentId);
+            await _unitOfWork.SaveChangesAsync();
+            TempData["EmployeeEnrollmentDeleteSuccess"] = "Employee unenrolled from course";
+            return RedirectToAction(nameof(Index), "Employees");
         }
+
+        [HttpGet]
+        public async Task<FileResult> DownloadTotalEmployeesToExcel()
+        {
+            var employeeExcelFile = await _unitOfWork.EmployeeRepository.GenerateExcelFileForTotalEmployees();
+            var fileName = employeeExcelFile.FileName;
+            var fileType = employeeExcelFile.FileType;
+            var fileContent = employeeExcelFile.FileContent;
+            return File(fileContent, fileType, fileName);
+        }
+
     }
 }

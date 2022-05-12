@@ -1,4 +1,5 @@
-﻿using AdminPortal.Common.Models.EmployeesViewModels;
+﻿using AdminPortal.Common.Models;
+using AdminPortal.Common.Models.EmployeesViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,5 +15,10 @@ namespace AdminPortal.CoreBusiness.Repositories.Contracts
         Task<EmployeeVM> GetEmployeeDetails(int? employeeId);
 
         Task<EmployeeSearchResultVM> SearchEmployeeByEmployeeNo(string employeeNo);
+        Task UpdateEmployeeDetails(EmployeeVM employeeVM);
+        Task DeleteEmployee(string employeeNo);
+        Task<int> GetTotalNumberOfEmployees();
+
+        Task<ExcelFileDownloadProperties> GenerateExcelFileForTotalEmployees();
     }
 }

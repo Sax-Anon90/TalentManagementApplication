@@ -1,5 +1,11 @@
 ﻿@model EmployeeDetailsAndEmployeeFilesVM
 
+@inject IUnitOfWork _unitOfWork
+
+@{
+    var totalEmployeeFiles = await _unitOfWork.EmployeeFileAttachmentsRepository.GetTotalNumberOfEmployeeFiles(@Model.EmployeeDetails.Id);
+    var totalCoursesEnrolled = await _unitOfWork.CoursesEnrollmentsRepository.GetTotalNumberOfCoursesEnrolledByEmployee(@Model.EmployeeDetails.Id);
+}
 <br />
 
 <section class="content">
@@ -9,7 +15,7 @@
                 <!-- small box -->
                 <div class="small-box bg-info">
                     <div class="inner">
-                        <h3>10</h3>
+                        <h3>@totalEmployeeFiles</h3>
                         <p>Total Employee Files</p>
                     </div>
                     <div class="icon">
@@ -20,7 +26,7 @@
             <div class="col-lg-3 col-6">
                 <div class="small-box bg-danger">
                     <div class="inner">
-                        <h3>0</h3>
+                        <h3>@totalCoursesEnrolled</h3>
                         <p>Total Courses Enrolled</p>
                     </div>
                     <div class="icon">
@@ -109,7 +115,7 @@
                         <thead style="background-color:#333130;">
                             <tr>
                                 <th style="color:white;">File Name</th>
-                                <th>Actions</th>
+                                <th style="color:white;">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -118,11 +124,12 @@
                                 <tr>
                                     <td>@file.FileName</td>
                                     <td>
-                                        <button type="button" data-bs-toggle="modal viewModel" data-bs-target="#courseDetails"
-                                        class="btn btn-info" style="float:left;margin-left:10px;">
+                                        <a asp-controller="Employees" asp-action="DownloadEmployeeFileAttachment" asp-route-Id="@file.Id"
+                                   class="btn btn-info" style="float:left;margin-left:10px;">
                                             <i class="fa fa-download"></i>
-                                        </button>
-                                        <button type="button" class="btn btn-danger  DeleteCoursebtn" style="float:left;margin-left:10px;">
+                                        </a>
+                                        <button type="button" class="btn btn-danger DeleteEmployeeFileAttachment"
+                                        data-employeeFileAttachmentId="@file.Id" style="float:left;margin-left:10px;">
                                             <i class="fa fa-trash"></i>
                                         </button>
                                     </td>
@@ -131,8 +138,8 @@
                         </tbody>
                     </table>
                 </div>
-                <form asp-controller="Courses" asp-action="DeleteCourse" id="DeleteCourseForm">
-                    <input type="hidden" id="Id" name="Id">
+                <form asp-controller="Employees" asp-action="DeleteEmployeeFileAttachment" id="DeleteEmployeeFileAttachmentForm">
+                    <input type="hidden" id="employeeFileAttachmentId" name="employeeFileAttachmentId">
                 </form>
             }
         </div>
@@ -147,21 +154,37 @@
                         <th style="color:white;">
                             category
                         </th>
+                        <th style="color:white;">
+                            Actions
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var course in Model.EmployeeCourseEnrollmentsVM)
+                    @foreach (var courseEnrollment in Model.EmployeeCourseEnrollmentsVM)
                     {
                         <tr>
-                            <td>@course.Course.CourseName</td>
-                            <td>@course.Course.CourseCategory.CategoryName</td>
+                            <td>@courseEnrollment.Course.CourseName</td>
+                            <td>@courseEnrollment.Course.CourseCategory.CategoryName</td>
+                            <td>
+                                <button type="button" class="btn btn-danger unEnrollEmployee"
+                                    data-courseEnrollmentId="@courseEnrollment.Id" style="float:left;margin-left:10px;">
+                                    <i class="fa fa-graduation-cap"></i> unenroll
+                                </button>
+                            </td>
                         </tr>
                     }
                 </tbody>
             </table>
+            <form asp-controller="Employees" asp-action="UnenrollEmployeeFromCourse" id="UnenrollEmployeeForm">
+                <input type="hidden" id="courseEnrollmentId" name="courseEnrollmentId" />
+            </form>
         </div>
 
     </div>
 </div>
-
+<div class="card border border-dark p-1">
+    <a asp-controller="Employees" asp-action="Index" class="btn btn-info btn-block mb-1">
+        <i class="fa fa-users"></i> Back to Employees Page
+    </a>
+</div>
 

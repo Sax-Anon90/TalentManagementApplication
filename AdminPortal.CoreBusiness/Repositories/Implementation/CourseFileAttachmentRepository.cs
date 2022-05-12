@@ -22,10 +22,6 @@ namespace AdminPortal.CoreBusiness.Repositories.Implementation
 
         public async Task<ICollection<CourseFileAttachmentViewVM>> GetAllCourseFileAttachmentsById(int? CourseId)
         {
-            if (CourseId == null)
-            {
-                return null;
-            }
             var courseFileAttachments = await _dbContext.CourseFileAttachments
                 .Where(x => x.CourseId == CourseId)
                 .ProjectTo<CourseFileAttachmentViewVM>(_configurationProvider)

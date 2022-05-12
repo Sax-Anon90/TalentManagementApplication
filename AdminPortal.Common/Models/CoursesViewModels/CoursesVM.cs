@@ -4,9 +4,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace AdminPortal.Common.Models.CoursesViewModels
 {
-    public class CoursesVM
+    public class CoursesVM : BaseViewModel.BaseViewModel
     {
-        public int Id { get; set; }
         [Display(Name = "Course Name")]
         public string? CourseName { get; set; }
 
@@ -20,7 +19,7 @@ namespace AdminPortal.Common.Models.CoursesViewModels
 
         public bool Validation()
         {
-            if(Id == 0 || CourseName is null || CourseCategoryId is null || CourseCategoryId == 0)
+            if (Id == 0 || CourseName is null || CourseCategoryId is null || CourseCategoryId == 0)
             {
                 return false;
             }

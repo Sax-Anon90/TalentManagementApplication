@@ -21,10 +21,6 @@ namespace AdminPortal.CoreBusiness.Repositories.Implementation
         }
         public async Task<CoursesVM> GetCourseDetails(int? courseId)
         {
-            if(courseId == null)
-            {
-                return null;
-            }
             var course = await _dbContext.Courses
                 .Include(x => x.CourseCategory)
                 .ProjectTo<CoursesVM>(_configurationProvider)
@@ -52,13 +48,7 @@ namespace AdminPortal.CoreBusiness.Repositories.Implementation
 
         public async Task UpdateCourse(CoursesVM courseUpdateModel)
         {
-            CoursesVM courseEditModel = new()
-            {
-                Id = courseUpdateModel.Id,
-                CourseName = courseUpdateModel.CourseName,
-                CourseCategoryId = courseUpdateModel.CourseCategoryId
-            };
-            var courseModel = _mapper.Map<Course>(courseEditModel);
+            var courseModel = _mapper.Map<Course>(courseUpdateModel);
             _dbContext.Courses.Update(courseModel);
         }
 

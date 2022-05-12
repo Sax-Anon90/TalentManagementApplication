@@ -3,9 +3,8 @@
 namespace AdminPortal.Common.Models.EmployeesViewModels
 {
     //Employees enrolled in a course hence class is in EmployeesViewModel not CoursesViewModel
-    public class CourseEnrollmentsVM
+    public class CourseEnrollmentsVM : BaseViewModel.BaseViewModel
     {
-        public int Id { get; set; }
         public string? Status { get; set; }
         public int? EmployeeId { get; set; }
         public int? CourseId { get; set; }

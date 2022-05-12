@@ -8,9 +8,8 @@ using System.Threading.Tasks;
 
 namespace AdminPortal.Common.Models.EmployeesViewModels
 {
-    public class EmployeeVM
+    public class EmployeeVM : BaseViewModel.BaseViewModel
     {
-        public int Id { get; set; }
         [Display(Name="Employee Number")]
         public string? EmployeeNo { get; set; }
         [Display(Name = "First Name")]
@@ -23,5 +22,15 @@ namespace AdminPortal.Common.Models.EmployeesViewModels
         public string? PositionTitle { get; set; }
 
         public virtual ICollection<CourseEnrollmentsVM> CourseEnrollments { get; set; }
+
+        public bool Valdiation()
+        {
+            if(Id is 0 || EmployeeNo is null || FirstName is null || LastName is null ||
+                Department is null || Gender is null || PositionTitle is null)
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }

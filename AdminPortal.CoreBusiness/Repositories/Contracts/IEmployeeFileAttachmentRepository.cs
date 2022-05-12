@@ -11,5 +11,9 @@ namespace AdminPortal.CoreBusiness.Repositories.Contracts
     {
         Task<bool> UploadEmployeeFileAttachment(EmployeeAndEmployeeTrainingVM employeeFileAttachmentModel, int employeeId);
         Task<ICollection<EmployeeFileAttachmentsVM>> GetAllEmployeeFileAttachmentsById(int employeeId);
+        Task<EmployeeFileAttachmentsVM> GetEmployeeFileAttachment(int Id);
+        Task DeleteEmployeeFileAttachment(int employeeFileAttachmentId);
+        Task<int> GetTotalNumberOfEmployeeFiles(int employeeId);
+        Task<int> GetTotalOfAllEmployeeFiles();
     }
 }

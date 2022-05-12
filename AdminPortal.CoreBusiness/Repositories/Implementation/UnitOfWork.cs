@@ -48,7 +48,7 @@ namespace AdminPortal.CoreBusiness.Repositories.Implementation
 
         public async Task SaveChangesAsync()
         {
-           await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

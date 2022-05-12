@@ -7,8 +7,12 @@
 @{
     var Departments = await _unitOfWork.DepartmentsRepository.GetAllDepartments();
     var Genders = await _unitOfWork.GenderRepository.GetAllGenders();
+    var totalEmployees = await _unitOfWork.EmployeeRepository.GetTotalNumberOfEmployees();
+    var totalEmployeeFiles = await _unitOfWork.EmployeeFileAttachmentsRepository.GetTotalOfAllEmployeeFiles();
+    var totalEnrollments = await _unitOfWork.CoursesEnrollmentsRepository.GetTotalOfAllEnrollments();
 }
 
+<!--#Region TempData Success and failure Messages-->
 @if (TempData["EmployeeeAddFail"] != null)
 {
     <div class="alert alert-danger" role="alert">
@@ -58,7 +62,26 @@
         @TempData["EnrolEmployeeToCourseFail"]
     </div>
 }
-
+@if (TempData["UpdateEmployeeFail"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["UpdateEmployeeFail"]
+    </div>
+}
+@if (TempData["EmployeeFileDeleteSuccess"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["EmployeeFileDeleteSuccess"]
+    </div>
+}
+@if (TempData["EmplyeeUpdateSuccess"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["EmplyeeUpdateSuccess"]
+    </div>
+}
+<!--#EndRegion-->
+<!--#Region Info Boxes-->
 <section class="content">
     <div class="container-fluid">
         <div class="row">
@@ -66,42 +89,41 @@
                 <!-- small box -->
                 <div class="small-box bg-info">
                     <div class="inner">
-                        <h3>10</h3>
+                        <h3>@totalEmployees</h3>
                         <p>Total Employees</p>
                     </div>
                     <div class="icon">
-                        <i class="fa fa-graduation-cap"></i>
+                        <i class="fa fa-users"></i>
                     </div>
-                    <a href="#" class="small-box-footer">Downlaod to Excel <i class="fa fa-download"></i></a>
                 </div>
             </div>
+
             <div class="col-lg-3 col-6">
                 <div class="small-box bg-danger">
                     <div class="inner">
-                        <h3>0</h3>
+                        <h3>@totalEmployeeFiles</h3>
                         <p>Total Employee files</p>
                     </div>
                     <div class="icon">
-                        <i class="fa fa-list"></i>
+                        <i class="fa fa-file"></i>
                     </div>
-                    <a href="#" class="small-box-footer">Downlaod to Excel <i class="fa fa-download"></i></a>
                 </div>
             </div>
             <div class="col-lg-3 col-6">
                 <div class="small-box bg-warning">
                     <div class="inner">
-                        <h3>0</h3>
+                        <h3>@totalEnrollments</h3>
                         <p>Total enrollments</p>
                     </div>
                     <div class="icon">
-                        <i class="ion ion-stats-bars"></i>
+                        <i class="fa fa-graduation-cap"></i>
                     </div>
-                    <a href="#" class="small-box-footer">More info</a>
                 </div>
             </div>
         </div>
     </div>
 </section>
+<!--#EndRegion-->
 
 <div class="card border border-dark p-1">
     <div class="card-header bg-success" style="color:white"><h3>Employee Management <i class="fa fa-users"></i></h3></div>
@@ -118,10 +140,13 @@
                     style="float:left;margin-left:10px;">
                 <i class="fa fa-plus"></i> Add Employee
             </button>
+            <a asp-controller="Employees" asp-action="DownloadTotalEmployeesToExcel"
+               style="float:right;margin-right:10px;" class="btn btn-info">Download to Excel <i class="fas fa-download"></i></a>
             <br />
             <br />
             <br />
-            <!-- Add New Course Pop up View Begin-->
+
+            <!-- Add New Employee Modal Pop up View Begin-->
             <div class="modal fade" id="addEmployeeModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
@@ -188,9 +213,10 @@
                     </div>
                 </div>
             </div>
-            <!-- Add New Course Pop up View End-->
+            <!-- Add New Employee Modal Pop up View End-->
 
             <div class="table-responsive">
+                <div id="EmployeeUpdatePlaceHolderHere"></div>
                 <table class="table table-striped" style="width:100%" id="EmployeesTable">
                     <thead style="background-color:#333130;">
                         <tr>
@@ -236,11 +262,12 @@
                                    class="btn btn-info" style="float:left;margin-left:10px;">
                                         <i class="fa fa-info-circle"></i>
                                     </a>
-                                    <button type="button" data-bs-toggle="modal updateModal" data-bs-target="#updateCourseModal"
-                                        class="btn btn-warning" style="float:left;margin-left:10px;">
+                                    <button type="button" data-bs-toggle="modal employeeModal" data-bs-target="#updateEmployeeModal"
+                                        data-url="@Url.Action("UpdateEmployeePopUpView","Employees", new{employeeId = @employee.Id})" class="btn btn-warning" style="float:left;margin-left:10px;">
                                         <i class="fa fa-pencil"></i>
                                     </button>
-                                    <button type="button" class="btn btn-danger  DeleteCoursebtn" style="float:left;margin-left:10px;">
+                                    <button type="button" class="btn btn-danger  DeleteEmployeebtn"
+                                        data-employeeNo="@employee.EmployeeNo" style="float:left;margin-left:10px;">
                                         <i class="fa fa-trash"></i>
                                     </button>
                                 </td>
@@ -249,11 +276,20 @@
                     </tbody>
                 </table>
             </div>
+
+            <!--Upload Employee File Attachment Form begin-->
             <form enctype="multipart/form-data" asp-controller="Employees" asp-action="UploadEmployeeFileAttachment" id="UploadEmployeeFileAttatchmentForm">
                 <input asp-for="EmployeeFileAttachment.employeeFileAttachment" type="file" class="EmployeeAttatchmentFileData" style="display: none"
                        id="employeefileInput" />
                 <input type="hidden" id="employeeId" name="employeeId" />
             </form>
+            <!--Upload Employee File Attachment Form End-->
+            <!--Delete Employee Form begin-->
+            <form asp-controller="Employees" asp-action="DeleteEmployee" id="DeleteEmployeeForm">
+                <input type="hidden" id="employeeNo" name="employeeNo">
+            </form>
+            <!--Delete Employee Form begin-->
+
         </div>
         <div class="tab-pane fade" id="nav-Role" role="tabpanel" aria-labelledby="nav-Role-tab">
             <br />
@@ -279,13 +315,13 @@
                 <thead style="background-color:#333130;">
                     <tr>
                         <th style="color:white;">
-                            @Html.DisplayNameFor(model => model.EmployeeCreateViewModel.EmployeeNo)
+                            Employee No
                         </th>
                         <th style="color:white;">
-                            @Html.DisplayNameFor(model => model.EmployeeCreateViewModel.FirstName)
+                            First Name
                         </th>
                         <th style="color:white;">
-                            @Html.DisplayNameFor(model => model.EmployeeCreateViewModel.LastName)
+                            Last Name
                         </th>
                         <th style="color:white;">
                             Actions

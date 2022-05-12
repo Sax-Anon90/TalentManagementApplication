@@ -2,9 +2,8 @@
 
 namespace AdminPortal.Common.Models.CoursesViewModels
 {
-    public class CourseFileAttachmentViewVM
+    public class CourseFileAttachmentViewVM : BaseViewModel.BaseViewModel
     {
-        public int Id { get; set; }
         [Display(Name="File Name")]
         public string? FileName { get; set; }
         public string? FileType { get; set; }

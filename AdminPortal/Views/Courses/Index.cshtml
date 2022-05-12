@@ -6,8 +6,11 @@
     var totalNumberOfCourses = await _unitOfWork.CoursesRepository.GetTotalNumberOfCourses();
     var totalNumberOfCourseCategories = await _unitOfWork.CourseCategoriesRepository.GetTotalNoOfCourseCategories();
     var totalNumberOfCourseFiles = await _unitOfWork.CourseFileAttachmentsRepository.GetTotalNumberOfCourseFiles();
+    var totalEnrollments = await _unitOfWork.CoursesEnrollmentsRepository.GetTotalOfAllEnrollments();
 }
 <br />
+
+<!-- #region TempData Success and Failure Messages  -->
 @if (TempData["AddNewCourseFailed"] != null)
 {
     <div class="alert alert-danger" role="alert">
@@ -87,7 +90,8 @@
         @TempData["CourseCategoryDeleteSuccess"]
     </div>
 }
-
+<!-- #endregion -->
+<!-- #region Info Boxes-->
 <section class="content">
     <div class="container-fluid">
         <div class="row">
@@ -101,7 +105,6 @@
                     <div class="icon">
                         <i class="fa fa-graduation-cap"></i>
                     </div>
-                    <a href="#" class="small-box-footer">Downlaod to Excel <i class="fa fa-download"></i></a>
                 </div>
             </div>
             <div class="col-lg-3 col-6">
@@ -113,19 +116,17 @@
                     <div class="icon">
                         <i class="fa fa-list"></i>
                     </div>
-                    <a href="#" class="small-box-footer">Downlaod to Excel <i class="fa fa-download"></i></a>
                 </div>
             </div>
             <div class="col-lg-3 col-6">
                 <div class="small-box bg-warning">
                     <div class="inner">
-                        <h3>@totalNumberOfCourseCategories</h3>
+                        <h3>@totalEnrollments</h3>
                         <p>Total enrollments</p>
                     </div>
                     <div class="icon">
-                        <i class="ion ion-stats-bars"></i>
+                        <i class="fa fa-graduation-cap"></i>
                     </div>
-                    <a href="#" class="small-box-footer">More info</a>
                 </div>
             </div>
             <div class="col-lg-3 col-6">
@@ -135,14 +136,14 @@
                         <p>Total course content files</p>
                     </div>
                     <div class="icon">
-                        <i class="ion ion-stats-bars"></i>
+                        <i class="fa fa-file"></i>
                     </div>
-                    <a href="#" class="small-box-footer">More info</a>
                 </div>
             </div>
         </div>
     </div>
 </section>
+<!-- #endregion-->
 
 <div class="card border border-dark p-1">
     <div class="card-header bg-success" style="color:white"><h3>Course Management <i class="fa fa-graduation-cap"></i></h3></div>
@@ -160,6 +161,7 @@
                     style="float:left;margin-left:10px;">
                 <i class="fa fa-plus"></i> Add Course
             </button>
+
             <!-- Add New Course Pop View Begin-->
             <div class="modal fade" id="addCourseModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
@@ -198,6 +200,7 @@
                 </div>
             </div>
             <!-- Add New Course Pop View End-->
+
             <br />
             <br />
             <br />
@@ -227,10 +230,10 @@
                                     </label>
                                 </td>
                                 <td>
-                                    <button type="button" data-bs-toggle="modal viewModel" data-bs-target="#courseDetails"
-                                        data-url="@Url.Action("CourseDetailsPopUpView", "Courses", new {courseId = @course.Id})" class="btn btn-info" style="float:left;margin-left:10px;">
+                                    <a asp-controller="Courses" asp-action="CourseDetailsView" asp-route-courseId="@course.Id"
+                                   class="btn btn-info" style="float:left;margin-left:10px;">
                                         <i class="fa fa-info-circle"></i>
-                                    </button>
+                                    </a>
                                     <button type="button" data-bs-toggle="modal updateModal" data-bs-target="#updateCourseModal"
                                         data-url="@Url.Action("UpdateCoursePopUpView", "Courses", new {courseId = @course.Id})" class="btn btn-warning" style="float:left;margin-left:10px;">
                                         <i class="fa fa-pencil"></i>
@@ -259,6 +262,7 @@
             <button type="button" data-bs-toggle="modal" data-bs-target="#addCourseCategoryModal" class="btn btn-success" style="float:left;margin-left:10px;">
                 <i class="fa fa-plus"></i> Add Course Category
             </button>
+
             <!-- Add New Course Category Pop View Begin-->
             <div class="modal fade" id="addCourseCategoryModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
@@ -287,6 +291,7 @@
                 </div>
             </div>
             <!-- Add New Course Category Pop View End-->
+
             <br />
             <br />
             <br />

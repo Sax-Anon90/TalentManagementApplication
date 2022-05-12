@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace AdminPortal.Common.Models.CoursesViewModels
 {
-    public  class GenderVM
+    public class GenderVM : BaseViewModel.BaseViewModel
     {
-        public int Id { get; set; }
         public string? Gender1 { get; set; }
     }
 }
