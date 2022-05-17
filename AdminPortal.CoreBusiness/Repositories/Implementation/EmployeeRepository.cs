@@ -4,13 +4,13 @@ using AdminPortal.Data.Data;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
-using ClosedXML.Excel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AdminPortal.Common.Models;
+using AdminPortal.CoreBusiness.Services;
 
 namespace AdminPortal.CoreBusiness.Repositories.Implementation
 {
@@ -19,12 +19,15 @@ namespace AdminPortal.CoreBusiness.Repositories.Implementation
         private readonly SaxTalentManagementContext _dbContext;
         private readonly IMapper _mapper;
         private readonly AutoMapper.IConfigurationProvider _configurationProvider;
+        private readonly IExcelFileService _excelFileService;
         public EmployeeRepository(SaxTalentManagementContext _dbContext,
-            IMapper _mapper, AutoMapper.IConfigurationProvider _configurationProvider)
+            IMapper _mapper, AutoMapper.IConfigurationProvider _configurationProvider,
+            IExcelFileService _excelFileService)
         {
             this._dbContext = _dbContext;
             this._mapper = _mapper;
             this._configurationProvider = _configurationProvider;
+            this._excelFileService = _excelFileService;
         }
 
         public async Task AddNewEmployee(EmployeeAndEmployeeTrainingVM employeeAndEmployeeTrainingVM)
@@ -78,43 +81,9 @@ namespace AdminPortal.CoreBusiness.Repositories.Implementation
 
         public async Task<ExcelFileDownloadProperties> GenerateExcelFileForTotalEmployees()
         {
-
-            using (var workbook = new XLWorkbook())
-            {
-                var worksheet = workbook.Worksheets.Add("ExcelFileResult");
-                int currentRow = 1;
-                worksheet.Cell(currentRow, 1).Value = "Employee No";
-                worksheet.Cell(currentRow, 2).Value = "First Name";
-                worksheet.Cell(currentRow, 3).Value = "Last Name";
-                worksheet.Cell(currentRow, 4).Value = "Gender";
-                worksheet.Cell(currentRow, 5).Value = "Department";
-                worksheet.Cell(currentRow, 6).Value = "Position Title";
-
-                var employeesData = await GetAllEmployees();
-                foreach (var result in employeesData)
-                {
-                    currentRow++;
-                    worksheet.Cell(currentRow, 1).Value = result.EmployeeNo;
-                    worksheet.Cell(currentRow, 2).Value = result.FirstName;
-                    worksheet.Cell(currentRow, 3).Value = result.LastName;
-                    worksheet.Cell(currentRow, 4).Value = result.Gender;
-                    worksheet.Cell(currentRow, 5).Value = result.Department;
-                    worksheet.Cell(currentRow, 6).Value = result.PositionTitle;
-                }
-
-                using (var stream = new MemoryStream())
-                {
-                    workbook.SaveAs(stream);
-                    var content = stream.ToArray();
-                    var ExcelFile = new ExcelFileDownloadProperties()
-                    {
-                        FileName = "ExcelFileResult.xlsx",
-                        FileType = "application/vnd.openxmlformats-officedocument.spreadsheet.sheet",
-                        FileContent = content
-                    };
-                    return ExcelFile;
-                }
-            }
+            var allemployees = await GetAllEmployees();
+            var employeeExcelFile = await _excelFileService.GenerateExcelFileFromEmployeeData(allemployees);
+            return employeeExcelFile;
         }
     }
 }

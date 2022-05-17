@@ -71,5 +71,12 @@ namespace AdminPortal.CoreBusiness.Repositories.Implementation
            var totalNumberOfCourseFiles = await _dbContext.CourseFileAttachments.CountAsync();
             return totalNumberOfCourseFiles;
         }
+
+        public async Task<int> GetTotalNumberofCourseFilesById(int CourseId)
+        {
+            var totalCourseFiles = await _dbContext.CourseFileAttachments
+                .CountAsync(x => x.CourseId == CourseId);
+            return totalCourseFiles;
+        }
     }
 }

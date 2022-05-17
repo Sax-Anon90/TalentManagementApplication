@@ -44,6 +44,12 @@
         @TempData["SearchResultFail"]
     </div>
 }
+@if (TempData["EmployeeEnrollmentDeleteSuccess"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["EmployeeEnrollmentDeleteSuccess"]
+    </div>
+}
 @if (TempData["SearchResultSuccess"] != null)
 {
     <div class="alert alert-success" role="alert">
@@ -126,7 +132,7 @@
 <!--#EndRegion-->
 
 <div class="card border border-dark p-1">
-    <div class="card-header bg-success" style="color:white"><h3>Employee Management <i class="fa fa-users"></i></h3></div>
+    <div class="card-header bg-dark" style="color:white"><h3>Employee Management <i class="fa fa-users"></i></h3></div>
     <nav>
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
             <button class="nav-link active" id="nav-User-tab" data-bs-toggle="tab" data-bs-target="#nav-User" type="button" role="tab" aria-controls="nav-User" aria-selected="true"><strong>Employees</strong></button>
@@ -217,22 +223,22 @@
 
             <div class="table-responsive">
                 <div id="EmployeeUpdatePlaceHolderHere"></div>
-                <table class="table table-striped" style="width:100%" id="EmployeesTable">
-                    <thead style="background-color:#333130;">
+                <table class="table" style="width:100%" id="EmployeesTable">
+                    <thead>
                         <tr>
-                            <th style="color:white;">
+                            <th style="color:black;">
                                 @Html.DisplayNameFor(model => model.EmployeeCreateViewModel.FirstName)
                             </th>
-                            <th style="color:white;">
+                            <th style="color:black;">
                                 @Html.DisplayNameFor(model => model.EmployeeCreateViewModel.LastName)
                             </th>
-                            <th style="color:white;">
+                            <th style="color:black;">
                                 Employee File
                             </th>
-                            <th style="color:white;">
+                            <th style="color:black;">
                                 @Html.DisplayNameFor(model => model.EmployeeCreateViewModel.PositionTitle)
                             </th>
-                            <th style="color:white;">
+                            <th style="color:black;">
                                 Actions
                             </th>
                         </tr>
@@ -312,18 +318,18 @@
             </div>
 
             <table class="table table-striped" style="width:100%" id="EmployeesTable">
-                <thead style="background-color:#333130;">
+                <thead>
                     <tr>
-                        <th style="color:white;">
+                        <th style="color:black;">
                             Employee No
                         </th>
-                        <th style="color:white;">
+                        <th style="color:black;">
                             First Name
                         </th>
-                        <th style="color:white;">
+                        <th style="color:black;">
                             Last Name
                         </th>
-                        <th style="color:white;">
+                        <th style="color:black;">
                             Actions
                         </th>
                     </tr>
@@ -336,7 +342,7 @@
                             <td>@Model.EmployeeSearchResult.FirstName</td>
                             <td>@Model.EmployeeSearchResult.LastName</td>
                             <td>
-                                <a onclick="EnrolEmployeeLoader()" asp-controller="Employees" asp-action="EnrolEmployeeToCourseView" asp-route-employeeId="@Model.EmployeeSearchResult.Id" class="btn btn-info" style="float:left;margin-left:10px;">
+                                <a onclick="EnrolCourseDetails()" asp-controller="Employees" asp-action="EnrolEmployeeToCourseView" asp-route-employeeId="@Model.EmployeeSearchResult.Id" class="btn btn-info" style="float:left;margin-left:10px;">
                                     <i class="fa fa-graduation-cap"></i> enrol
                                 </a>
                             </td>

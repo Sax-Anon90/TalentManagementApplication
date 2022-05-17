@@ -9,5 +9,6 @@ namespace AdminPortal.CoreBusiness.Repositories.Contracts
         Task<CourseFileAttachmentViewVM> GetCourseFileAttachment(int Id);
         Task DeleteCourseFileAttachment(int courseFileAttachmentId);
         Task<int> GetTotalNumberOfCourseFiles();
+        Task<int> GetTotalNumberofCourseFilesById(int CourseId);
     }
 }

@@ -5,6 +5,8 @@
 @{
     var totalEmployeeFiles = await _unitOfWork.EmployeeFileAttachmentsRepository.GetTotalNumberOfEmployeeFiles(@Model.EmployeeDetails.Id);
     var totalCoursesEnrolled = await _unitOfWork.CoursesEnrollmentsRepository.GetTotalNumberOfCoursesEnrolledByEmployee(@Model.EmployeeDetails.Id);
+    var totalCompletedCourses = await _unitOfWork.CoursesEnrollmentsRepository.GetTotalCoursesCompletedByEmployee(@Model.EmployeeDetails.Id);
+    var totalCoursesInProccess = await _unitOfWork.CoursesEnrollmentsRepository.GetTotalCoursesInProccessByEmployee(@Model.EmployeeDetails.Id);
 }
 <br />
 
@@ -34,12 +36,34 @@
                     </div>
                 </div>
             </div>
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-success">
+                    <div class="inner">
+                        <h3>@totalCompletedCourses</h3>
+                        <p>Total Courses completed</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fa fa-list"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-warning">
+                    <div class="inner">
+                        <h3>@totalCoursesInProccess</h3>
+                        <p>Total Courses in process</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fa fa-list"></i>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </section>
 
 <div class="card border border-dark">
-    <div class="card-header bg-success" style="color:white">
+    <div class="card-header bg-dark" style="color:white">
         <h3>
             Employee Details
             <i class="fas fa-id-card"></i>
@@ -112,10 +136,10 @@
             {
                 <div class="table-responsive">
                     <table class="table table-striped" style="width:100%" id="coursesTable">
-                        <thead style="background-color:#333130;">
+                        <thead>
                             <tr>
-                                <th style="color:white;">File Name</th>
-                                <th style="color:white;">Actions</th>
+                                <th style="color:black;">File Name</th>
+                                <th style="color:black;">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -129,7 +153,8 @@
                                             <i class="fa fa-download"></i>
                                         </a>
                                         <button type="button" class="btn btn-danger DeleteEmployeeFileAttachment"
-                                        data-employeeFileAttachmentId="@file.Id" style="float:left;margin-left:10px;">
+                                        data-employeeFileAttachmentId="@file.Id" 
+                                        data-employeeIdForDetails="@file.EmployeeId"style="float:left;margin-left:10px;">
                                             <i class="fa fa-trash"></i>
                                         </button>
                                     </td>
@@ -140,44 +165,71 @@
                 </div>
                 <form asp-controller="Employees" asp-action="DeleteEmployeeFileAttachment" id="DeleteEmployeeFileAttachmentForm">
                     <input type="hidden" id="employeeFileAttachmentId" name="employeeFileAttachmentId">
+                    <input type="hidden" id="employeeIdForDetails" name="employeeIdForDetails">
                 </form>
             }
         </div>
+        <div id="UpdateEmployeeCourseEnrollmentPlaceHolderHere"></div>
         <div class="tab-pane fade" id="nav-Role" role="tabpanel" aria-labelledby="nav-Role-tab">
             <br />
-            <table class="table table-striped" style="width:100%" id="EmployeesTable">
-                <thead style="background-color:#333130;">
-                    <tr>
-                        <th style="color:white;">
-                            course name
-                        </th>
-                        <th style="color:white;">
-                            category
-                        </th>
-                        <th style="color:white;">
-                            Actions
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var courseEnrollment in Model.EmployeeCourseEnrollmentsVM)
-                    {
+            <div class="table-responsive">
+                <table class="table table-striped" style="width:100%" id="EmployeesTable">
+                    <thead>
                         <tr>
-                            <td>@courseEnrollment.Course.CourseName</td>
-                            <td>@courseEnrollment.Course.CourseCategory.CategoryName</td>
-                            <td>
-                                <button type="button" class="btn btn-danger unEnrollEmployee"
-                                    data-courseEnrollmentId="@courseEnrollment.Id" style="float:left;margin-left:10px;">
-                                    <i class="fa fa-graduation-cap"></i> unenroll
-                                </button>
-                            </td>
+                            <th style="color:black;">
+                                course name
+                            </th>
+                            <th style="color:black;">
+                                category
+                            </th>
+                            <th style="color:black;">
+                                status
+                            </th>
+                            <th style="color:black;">
+                                Actions
+                            </th>
                         </tr>
-                    }
-                </tbody>
-            </table>
-            <form asp-controller="Employees" asp-action="UnenrollEmployeeFromCourse" id="UnenrollEmployeeForm">
-                <input type="hidden" id="courseEnrollmentId" name="courseEnrollmentId" />
-            </form>
+                    </thead>
+                    <tbody>
+                        @foreach (var courseEnrollment in Model.EmployeeCourseEnrollmentsVM)
+                        {
+                            <tr>
+                                <td>@courseEnrollment.Course.CourseName</td>
+                                <td>@courseEnrollment.Course.CourseCategory.CategoryName</td>
+                                <td>
+                                    @switch (courseEnrollment.Status)
+                                    {
+                                        case "Enrolled":
+                                            <span class="badge badge-pill badge-info">@courseEnrollment.Status</span>
+                                            break;
+                                        case "In proccess":
+                                            <span class="badge badge-pill badge-warning">@courseEnrollment.Status</span>
+                                            break;
+                                        case "Completed":
+                                            <span class="badge badge-pill badge-success">@courseEnrollment.Status</span>
+                                            break;
+                                    }
+                                </td>
+                                <td>
+                                    <button type="button" data-bs-toggle="modal enrollmentModal" data-bs-target="#updateEmployeeCourseEnrollmentModal"
+                                        data-url="@Url.Action("UpdateEmployeeCourseEnrollmentView","Employees", new{employeeCourseEnrollmentId = @courseEnrollment.Id})" class="btn btn-warning" style="float:left;margin-left:10px;">
+                                        <i class="fa fa-pencil"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-danger unEnrollEmployee"
+                                        data-courseEnrollmentId="@courseEnrollment.Id"
+                                        data-employeeId="@courseEnrollment.Employee.Id" style="float:left;margin-left:10px;">
+                                        <i class="fa fa-graduation-cap"></i> unenroll
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <form asp-controller="Employees" asp-action="UnenrollEmployeeFromCourse" id="UnenrollEmployeeForm">
+                    <input type="hidden" id="courseEnrollmentId" name="courseEnrollmentId" />
+                    <input type="hidden" id="employeeId" name="employeeId" />
+                </form>
+            </div>
         </div>
 
     </div>

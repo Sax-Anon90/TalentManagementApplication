@@ -1,0 +1,12 @@
+﻿
+<h1>Something went wrong</h1>
+
+<br />
+
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+       @TempData["ErrorMessage"]
+    </div>
+}

@@ -72,5 +72,13 @@ namespace AdminPortal.CoreBusiness.Repositories.Implementation
             var totalCourseCategories = await _dbContext.CourseCategories.CountAsync();
             return totalCourseCategories;
         }
+
+        public async Task<int> GetTotalNumberOfCoursesInCourseCategory(int courseCategoryId)
+        {
+           var totalCoursesInCategory = await _dbContext.CourseCategories
+                .Include(x => x.Courses)
+                .CountAsync(x => x.Id == courseCategoryId);
+            return totalCoursesInCategory;
+        }
     }
 }

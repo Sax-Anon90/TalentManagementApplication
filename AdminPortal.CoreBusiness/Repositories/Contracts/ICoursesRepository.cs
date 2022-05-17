@@ -1,4 +1,5 @@
-﻿using AdminPortal.Common.Models.CoursesViewModels;
+﻿using AdminPortal.Common.Models;
+using AdminPortal.Common.Models.CoursesViewModels;
 
 namespace AdminPortal.CoreBusiness.Repositories.Contracts
 {
@@ -10,5 +11,6 @@ namespace AdminPortal.CoreBusiness.Repositories.Contracts
         Task UpdateCourse(CoursesVM courseUpdateModel);
         Task DeleteCourse(int Id);
         Task<int> GetTotalNumberOfCourses();
+        Task<ExcelFileDownloadProperties> GetAllCoursesDataToExcelFile();
     }
 }

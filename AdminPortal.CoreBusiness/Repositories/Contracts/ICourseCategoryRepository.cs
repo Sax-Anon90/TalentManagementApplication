@@ -11,5 +11,6 @@ namespace AdminPortal.CoreBusiness.Repositories.Contracts
         Task UpdateCourseCategory(CourseCategoryVM courseCategoryVM);
         Task DeleteCourseCategory(int courseCategoryId);
         Task<int> GetTotalNoOfCourseCategories();
+        Task<int> GetTotalNumberOfCoursesInCourseCategory(int courseCategoryId);
     }
 }

@@ -4,6 +4,8 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using AdminPortal.CoreBusiness.Repositories.Contracts;
+using AdminPortal.Common.Models;
+using AdminPortal.CoreBusiness.Services;
 
 namespace AdminPortal.CoreBusiness.Repositories.Implementation
 {
@@ -12,12 +14,14 @@ namespace AdminPortal.CoreBusiness.Repositories.Implementation
         private readonly SaxTalentManagementContext _dbContext;
         private readonly IMapper _mapper;
         private readonly AutoMapper.IConfigurationProvider _configurationProvider;
+        private readonly IExcelFileService _excelFileService;
         public CoursesRepository(SaxTalentManagementContext _dbContext, IMapper _mapper,
-            AutoMapper.IConfigurationProvider _configurationProvider)
+            AutoMapper.IConfigurationProvider _configurationProvider, IExcelFileService _excelFileService)
         {
             this._dbContext = _dbContext;
             this._mapper = _mapper;
             this._configurationProvider = _configurationProvider;
+            this._excelFileService = _excelFileService;
         }
         public async Task<CoursesVM> GetCourseDetails(int? courseId)
         {
@@ -62,6 +66,13 @@ namespace AdminPortal.CoreBusiness.Repositories.Implementation
         {
             var totalCourses = await _dbContext.Courses.CountAsync();
             return totalCourses;
+        }
+
+        public async Task<ExcelFileDownloadProperties> GetAllCoursesDataToExcelFile()
+        {
+            var coursesData = await GetAllCourses();
+            var courseExcelFile = await _excelFileService.GenerateExcelFileFromCoursesData(coursesData);
+            return courseExcelFile;
         }
     }
 }

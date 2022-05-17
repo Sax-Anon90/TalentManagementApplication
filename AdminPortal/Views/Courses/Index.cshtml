@@ -6,7 +6,7 @@
     var totalNumberOfCourses = await _unitOfWork.CoursesRepository.GetTotalNumberOfCourses();
     var totalNumberOfCourseCategories = await _unitOfWork.CourseCategoriesRepository.GetTotalNoOfCourseCategories();
     var totalNumberOfCourseFiles = await _unitOfWork.CourseFileAttachmentsRepository.GetTotalNumberOfCourseFiles();
-    var totalEnrollments = await _unitOfWork.CoursesEnrollmentsRepository.GetTotalOfAllEnrollments();
+    var totalEnrollments = await _unitOfWork.CoursesEnrollmentsRepository. GetTotalOfAllEnrollments();
 }
 <br />
 
@@ -146,7 +146,7 @@
 <!-- #endregion-->
 
 <div class="card border border-dark p-1">
-    <div class="card-header bg-success" style="color:white"><h3>Course Management <i class="fa fa-graduation-cap"></i></h3></div>
+    <div class="card-header bg-dark" style="color:white"><h3>Course Management <i class="fa fa-graduation-cap"></i></h3></div>
     <nav>
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
             <button class="nav-link active" id="nav-User-tab" data-bs-toggle="tab" data-bs-target="#nav-User" type="button" role="tab" aria-controls="nav-User" aria-selected="true"><strong>Courses</strong></button>
@@ -161,7 +161,10 @@
                     style="float:left;margin-left:10px;">
                 <i class="fa fa-plus"></i> Add Course
             </button>
-
+            <a asp-controller="Courses" asp-action="DownloadAllCoursesToExcel" class="btn btn-info"
+               style="float:right;margin-right:10px;">
+                <i class="fa fa-download"></i> Download to excel
+            </a>
             <!-- Add New Course Pop View Begin-->
             <div class="modal fade" id="addCourseModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
@@ -200,7 +203,6 @@
                 </div>
             </div>
             <!-- Add New Course Pop View End-->
-
             <br />
             <br />
             <br />
@@ -208,12 +210,12 @@
             <div id=UpdateCoursePlaceHolderHere></div>
             <div class="table-responsive">
                 <table class="table table-striped" style="width:100%" id="coursesTable">
-                    <thead style="background-color:#333130;">
+                    <thead>
                         <tr>
-                            <th style="color:white;">Course Name</th>
-                            <th style="color:white;">Category</th>
-                            <th style="color:white;">Course content File</th>
-                            <th style="color:white;">Actions</th>
+                            <th style="color:black;">Course Name</th>
+                            <th style="color:black;">Category</th>
+                            <th style="color:black;">Course content File</th>
+                            <th style="color:black;">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -230,7 +232,7 @@
                                     </label>
                                 </td>
                                 <td>
-                                    <a asp-controller="Courses" asp-action="CourseDetailsView" asp-route-courseId="@course.Id"
+                                    <a onclick="CourseDetailsView()" asp-controller="Courses" asp-action="CourseDetailsView" asp-route-courseId="@course.Id"
                                    class="btn btn-info" style="float:left;margin-left:10px;">
                                         <i class="fa fa-info-circle"></i>
                                     </a>
@@ -299,10 +301,10 @@
                 <div id="CourseCategoryDetailsPlaceHolderHere"></div>
                 <div id="CourseCategoryUpdatePlaceHolderHere"></div>
                 <table class="table table-striped" style="width:100%" id="CourseCategoryTable">
-                    <thead style="background-color:#333130;">
+                    <thead>
                         <tr>
-                            <th style="color:white;">Category Name</th>
-                            <th style="color:white;">Actions</th>
+                            <th style="color:black;">Category Name</th>
+                            <th style="color:black;">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -311,10 +313,10 @@
                             <tr>
                                 <td>@category.CategoryName</td>
                                 <td>
-                                    <button type="button" data-bs-toggle="modal viewModal" data-bs-target="#courseCategoryDetails"
-                                        data-url="@Url.Action("CourseCategoryDetailsPopUpView", "Courses", new{courseCategoryId = @category.Id})" class="btn btn-info" style="float:left;margin-left:10px;">
+                                    <a asp-controller="Courses" asp-action="CourseCategoryDetailsView" asp-route-courseCategoryId="@category.Id" type="button"
+                                   class="btn btn-info" style="float:left;margin-left:10px;">
                                         <i class="fa fa-info-circle"></i>
-                                    </button>
+                                    </a>
                                     <button type="button" data-bs-toggle="modal update" data-bs-target="#UpdateCourseCategoryModal"
                                         data-url="@Url.Action("UpdateCourseCategoryPopUpView", "Courses", new {courseCategoryId = @category.Id})" class="btn btn-warning" style="float:left;margin-left:10px;">
                                         <i class="fa fa-pencil"></i>

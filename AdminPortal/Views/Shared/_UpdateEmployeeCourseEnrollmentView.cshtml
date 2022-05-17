@@ -1,0 +1,45 @@
+﻿@model CourseEnrollmentsVM
+
+<div class="modal fade" id="updateEmployeeCourseEnrollmentModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Update Course</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form asp-controller="Employees" asp-action="UpdateEmployeeCourseEnrollment">
+                    <input asp-for="Id" type="hidden" />
+                    <input asp-for="CourseId" type="hidden" />
+                    <input asp-for="EmployeeId" type="hidden" />
+                    <div class="mb-3">
+                        <label style="color:black" class="col-form-label">
+                            <strong>
+                                Course Name (Readonly)
+                            </strong>
+                        </label>
+                        <select class="form-select">
+                            <option>@Model.Course.CourseName</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label style="color:black" class="col-form-label">
+                            <strong>
+                                @Html.DisplayNameFor(model => model.Status)
+                            </strong>
+                        </label>
+                        <select asp-for="Status" class="form-select">
+                            <option>Enrolled</option>
+                            <option>In proccess</option>
+                            <option>Completed</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" onclick="UpdateEmployeeCourseEnrollment()" class="btn btn-primary">Update Enrollment</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

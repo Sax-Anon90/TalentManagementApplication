@@ -65,9 +65,31 @@ $(function () {
     });
 });
 
-function EnrolEmployeeLoader() {
+$(function () {
+    var PlaceHolderElement = $('#UpdateEmployeeCourseEnrollmentPlaceHolderHere');
+    $("body").on('click', 'button[data-bs-toggle="modal enrollmentModal"]', function (e) {
+        var url = $(this).data('url');
+        $.get(url).done(function (data) {
+            PlaceHolderElement.html(data);
+            PlaceHolderElement.find('.modal').modal('show')
+        });
+    });
+});
+
+function EnrolCourseDetails() {
     swal.fire({
         text: "Loading Course Data. Please wait ...",
+        showConfirmButton: false,
+        allowOutsideClick: false,
+        didOpen: () => {
+            swal.showLoading();
+        }
+    });
+}
+
+function Enrol() {
+    swal.fire({
+        text: "Enrolling. Please wait ...",
         showConfirmButton: false,
         allowOutsideClick: false,
         didOpen: () => {
@@ -117,7 +139,9 @@ $(function () {
                 });
                 var btn = $(this);
                 var employeeFileAttachmentId = btn.attr('data-employeeFileAttachmentId');
+                var employeeIdForDetails = btn.attr('data-employeeIdForDetails');
                 $('#employeeFileAttachmentId').val(employeeFileAttachmentId);
+                $('#employeeIdForDetails').val(employeeIdForDetails);
                 document.getElementById('DeleteEmployeeFileAttachmentForm').submit();
             }
         });
@@ -170,10 +194,24 @@ $(function () {
                 });
                 var btn = $(this);
                 var courseEnrollmentId = btn.attr('data-courseEnrollmentId');
+                var employeeId = btn.attr('data-employeeId')
                 $('#courseEnrollmentId').val(courseEnrollmentId);
+                $('#employeeId').val(employeeId);
                 document.getElementById('UnenrollEmployeeForm').submit();
             }
         });
     });
 });
+
+function UpdateEmployeeCourseEnrollment() {
+    swal.fire({
+        text: "Updating Employee Course Enrollment. Please wait ...",
+        showConfirmButton: false,
+        allowOutsideClick: false,
+        didOpen: () => {
+            swal.showLoading();
+        }
+    });
+
+}
 

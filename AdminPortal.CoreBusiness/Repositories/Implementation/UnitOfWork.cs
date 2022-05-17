@@ -1,6 +1,7 @@
 ﻿using AdminPortal.Data.Data;
 using AutoMapper;
 using AdminPortal.CoreBusiness.Repositories.Contracts;
+using AdminPortal.CoreBusiness.Services;
 
 namespace AdminPortal.CoreBusiness.Repositories.Implementation
 {
@@ -9,21 +10,23 @@ namespace AdminPortal.CoreBusiness.Repositories.Implementation
         private readonly SaxTalentManagementContext _dbContext;
         private readonly IMapper _mapper;
         private readonly AutoMapper.IConfigurationProvider _configurationProvider;
+        private readonly IExcelFileService _excelFileService;
         public UnitOfWork(SaxTalentManagementContext _dbContext, IMapper _mapper,
-            AutoMapper.IConfigurationProvider _configurationProvider)
+            AutoMapper.IConfigurationProvider _configurationProvider, IExcelFileService _excelFileService)
         {
             this._mapper = _mapper;
             this._configurationProvider = _configurationProvider;
             this._dbContext = _dbContext;
+            this._excelFileService = _excelFileService;
 
             //Courses Repositories
             CourseCategoriesRepository = new CourseCategoryRepository(_dbContext, _mapper, _configurationProvider);
-            CoursesRepository = new CoursesRepository(_dbContext, _mapper, _configurationProvider);
+            CoursesRepository = new CoursesRepository(_dbContext, _mapper, _configurationProvider, _excelFileService);
             CourseFileAttachmentsRepository = new CourseFileAttachmentRepository(_dbContext, _mapper, _configurationProvider);
-            CoursesEnrollmentsRepository = new CourseEnrollmentsRepository(_dbContext, _mapper, _configurationProvider, CoursesRepository);
+            CoursesEnrollmentsRepository = new CourseEnrollmentsRepository(_dbContext, _mapper, _configurationProvider, CoursesRepository, _excelFileService);
 
             //Employee Repositories
-            EmployeeRepository = new EmployeeRepository(_dbContext, _mapper, _configurationProvider);
+            EmployeeRepository = new EmployeeRepository(_dbContext, _mapper, _configurationProvider, _excelFileService);
             EmployeeFileAttachmentsRepository = new EmployeeFileAttachmentRepository(_dbContext, _mapper, _configurationProvider);
 
             //Other repositories

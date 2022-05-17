@@ -1,8 +1,11 @@
-﻿using AdminPortal.Common.Models.EmployeesViewModels;
+﻿using AdminPortal.Common.Models;
+using AdminPortal.Common.Models.EmployeesViewModels;
 using AdminPortal.CoreBusiness.Repositories.Contracts;
+using AdminPortal.CoreBusiness.Services;
 using AdminPortal.Data.Data;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using ClosedXML.Excel;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -18,14 +21,26 @@ namespace AdminPortal.CoreBusiness.Repositories.Implementation
         private readonly IMapper _mapper;
         private readonly AutoMapper.IConfigurationProvider _configurationProvider;
         private readonly ICoursesRepository _coursesRepository;
+        private readonly IExcelFileService _excelFileService;
         public CourseEnrollmentsRepository(SaxTalentManagementContext _dbContext, IMapper _mapper,
-            AutoMapper.IConfigurationProvider _configurationProvider, ICoursesRepository _coursesRepository)
+            AutoMapper.IConfigurationProvider _configurationProvider, ICoursesRepository _coursesRepository,
+            IExcelFileService _excelFileService)
         {
             this._dbContext = _dbContext;
             this._mapper = _mapper;
             this._configurationProvider = _configurationProvider;
             this._coursesRepository = _coursesRepository;
+            this._excelFileService = _excelFileService;
         }
+        public async Task<CourseEnrollmentsVM> GetEmployeeCourseEnrollment(int employeeCourseEnrollmentId)
+        {
+            var employeeCourseEnrollment = await _dbContext.CourseEnrollments
+                .Include(x => x.Course)
+                .ProjectTo<CourseEnrollmentsVM>(_configurationProvider)
+                .FirstOrDefaultAsync(x => x.Id == employeeCourseEnrollmentId);
+            return employeeCourseEnrollment;
+        }
+
         public async Task<CourseEnrollmentsVM> GetCoursesNotEnrolledByEmployee(int? employeeId)
         {
             var allCourses = await _coursesRepository.GetAllCourses();
@@ -57,11 +72,29 @@ namespace AdminPortal.CoreBusiness.Repositories.Implementation
         public async Task<ICollection<CourseEnrollmentsVM>> GetAllEmployeeCourseEnrollments(int? employeeId)
         {
             var employeeCourses = await _dbContext.CourseEnrollments
+                 .Include(x => x.Employee)
                  .Include(x => x.Course).ThenInclude(x => x.CourseCategory)
                  .Where(x => x.EmployeeId == employeeId)
                  .ProjectTo<CourseEnrollmentsVM>(_configurationProvider)
                  .ToListAsync();
             return employeeCourses;
+        }
+        public async Task<ICollection<CourseEnrollmentsVM>> GetAllCoursesCompletedByEmployee(int? courseId)
+        {
+            var totalCompletedCourses = await _dbContext.CourseEnrollments
+               .Where(x => x.CourseId == courseId && x.Status.Equals("Completed"))
+               .ProjectTo<CourseEnrollmentsVM>(_configurationProvider)
+               .ToListAsync();
+            return totalCompletedCourses;
+        }
+
+        public async Task<ICollection<CourseEnrollmentsVM>> GetAllCoursesInProcessByEmployee(int? courseId)
+        {
+            var totalInProccessCourses = await _dbContext.CourseEnrollments
+                .Where(x => x.CourseId == courseId && x.Status.Equals("In proccess"))
+                .ProjectTo<CourseEnrollmentsVM>(_configurationProvider)
+                .ToListAsync();
+            return totalInProccessCourses;
         }
         public async Task<bool> EnrolEmployeeToCourse(int employeeId, CourseEnrollmentsVM courseEnrollmentsVM)
         {
@@ -110,10 +143,84 @@ namespace AdminPortal.CoreBusiness.Repositories.Implementation
         public async Task UnenrollEmployeeFromCourse(int courseEnrollmentId)
         {
             var CourseEnrollment = await _dbContext.CourseEnrollments.Where(x => x.Id == courseEnrollmentId)
+                //Just to observe if we are deleting the right course enrollment for debugging
                 .Include(x => x.Course)
                 .Include(x => x.Employee)
                 .FirstOrDefaultAsync();
             _dbContext.CourseEnrollments.Remove(CourseEnrollment);
+        }
+
+        public async Task<int> GetTotalNumberOfEmployeesEnrolledInCourse(int courseId)
+        {
+            var totalCourseEnrollments = await _dbContext.CourseEnrollments
+                .CountAsync(x => x.CourseId == courseId);
+            return totalCourseEnrollments;
+        }
+
+        public async Task<int> GetTotalCoursesCompletedByEmployees(int courseId)
+        {
+            var totalCompletedCourses = await _dbContext.CourseEnrollments
+                 .CountAsync(x => x.CourseId == courseId && x.Status.Equals("Completed"));
+            return totalCompletedCourses;
+        }
+
+        public async Task<int> GetTotalCoursesInProccessByEmployees(int courseId)
+        {
+            var totalInProccessCourses = await _dbContext.CourseEnrollments
+                 .CountAsync(x => x.CourseId == courseId && x.Status.Equals("In proccess"));
+            return totalInProccessCourses;
+        }
+
+        public async Task<int> GetTotalCoursesCompletedByEmployee(int employeeId)
+        {
+            var totalCompletedCourses = await _dbContext.CourseEnrollments
+                .Where(x => x.EmployeeId == employeeId)
+                .CountAsync(x => x.Status.Equals("Completed"));
+            return totalCompletedCourses;
+        }
+
+        public async Task<int> GetTotalCoursesInProccessByEmployee(int employeeId)
+        {
+            var totalCoursesInProcess = await _dbContext.CourseEnrollments
+                .Where(x => x.EmployeeId == employeeId)
+                .CountAsync(x => x.Status.Equals("In proccess"));
+            return totalCoursesInProcess;
+        }
+
+        public async Task<ICollection<CourseEnrollmentsVM>> GetAllEmployeesEnrolledInCourse(int? courseId)
+        {
+            var employeesInCourse = await _dbContext.CourseEnrollments
+                 .Where(x => x.CourseId == courseId)
+                 .Include(x => x.Employee)
+                 .ProjectTo<CourseEnrollmentsVM>(_configurationProvider)
+                 .ToListAsync();
+            return employeesInCourse;
+        }
+        public async Task UpdateEmployeeCourseEnrollment(CourseEnrollmentsVM courseEnrollmentsVM)
+        {
+            var employeeEnrollmentModel = _mapper.Map<CourseEnrollment>(courseEnrollmentsVM);
+            _dbContext.CourseEnrollments.Update(employeeEnrollmentModel);
+        }
+
+        public async Task<ExcelFileDownloadProperties> GetAllEmployeesEnrolledInCourseToExcel(int courseId)
+        {
+            var courseEnrollmentsData = await GetAllEmployeesEnrolledInCourse(courseId);
+            var courseEnrollmentsExcelFile = await _excelFileService.GenerateExcelFileFromCourseEnrollmentsData(courseEnrollmentsData);
+            return courseEnrollmentsExcelFile;
+
+        }
+        public async Task<ExcelFileDownloadProperties> GetAllEmployeesWhoCompletedCourseToExcel(int courseId)
+        {
+            var employeesWhoCompletedCourses = await GetAllCoursesCompletedByEmployee(courseId);
+            var employeesWhoCompletedCoursesData = await _excelFileService.GenerateExcelFileFromCourseEnrollmentsData(employeesWhoCompletedCourses);
+            return employeesWhoCompletedCoursesData;
+        }
+
+        public async Task<ExcelFileDownloadProperties> GetAllEmployeesInProccessToExcel(int courseId)
+        {
+            var employeesInProccess = await GetAllCoursesInProcessByEmployee(courseId);
+            var employeesInProccessData = await _excelFileService.GenerateExcelFileFromCourseEnrollmentsData(employeesInProccess);
+            return employeesInProccessData;
         }
     }
 }

@@ -1,6 +1,16 @@
 ﻿@model CourseDetailsAndCourseFilesVM
 
+@inject IUnitOfWork _unitOfWork
 
+@{
+    var totalCourseFiles = await _unitOfWork.CourseFileAttachmentsRepository.GetTotalNumberofCourseFilesById(@Model.CourseDetails.Id);
+    var totalEmployeesEnrolled = await _unitOfWork.CoursesEnrollmentsRepository.GetTotalNumberOfEmployeesEnrolledInCourse(@Model.CourseDetails.Id);
+    var totalEmployeesCompleted = await _unitOfWork.CoursesEnrollmentsRepository.GetTotalCoursesCompletedByEmployees(@Model.CourseDetails.Id);
+    var totalEmployeesInProccess = await _unitOfWork.CoursesEnrollmentsRepository.GetTotalCoursesInProccessByEmployees(@Model.CourseDetails.Id);
+
+}
+
+<br />
 <section class="content">
     <div class="container-fluid">
         <div class="row">
@@ -8,7 +18,7 @@
                 <!-- small box -->
                 <div class="small-box bg-info">
                     <div class="inner">
-                        <h3>9</h3>
+                        <h3>@totalCourseFiles</h3>
                         <p>Total Course Files</p>
                     </div>
                     <div class="icon">
@@ -19,8 +29,30 @@
             <div class="col-lg-3 col-6">
                 <div class="small-box bg-danger">
                     <div class="inner">
-                        <h3>9</h3>
+                        <h3>@totalEmployeesEnrolled</h3>
                         <p>Total Employees Enrolled</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fa fa-list"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-success">
+                    <div class="inner">
+                        <h3>@totalEmployeesCompleted</h3>
+                        <p>Total Employees Completed</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fa fa-list"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-warning">
+                    <div class="inner">
+                        <h3>@totalEmployeesInProccess</h3>
+                        <p>Total Employees In Proccess</p>
                     </div>
                     <div class="icon">
                         <i class="fa fa-list"></i>
@@ -32,7 +64,7 @@
 </section>
 
 <div class="card border border-dark p-1">
-    <div class="card-header bg-success" style="color:white">
+    <div class="card-header bg-dark" style="color:white">
         <h3>
             Course Details
             <i class="fas fa-graduation-cap"></i>
@@ -54,48 +86,185 @@
         </dd>
     </dl>
     <br />
-    <h4>Course Content Material</h4>
-    @if (Model.CourseFileAttachments.Count() == 0)
-    {
-        <div class="alert alert-danger" role="alert">
-            This course does not have any course content material
+    <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <button class="nav-link active" id="nav-User-tab" data-bs-toggle="tab" data-bs-target="#nav-User" type="button" role="tab" aria-controls="nav-User" aria-selected="true"><strong>Course Files</strong></button>
+            <button class="nav-link" id="nav-Role-tab" data-bs-toggle="tab" data-bs-target="#nav-Role" type="button" role="tab" aria-controls="nav-Role" aria-selected="false"><strong>Employees Enrolled</strong></button>
+            <button class="nav-link" id="nav-EmployeesCompleted-tab" data-bs-toggle="tab" data-bs-target="#nav-EmployeesCompleted" type="button" role="tab" aria-controls="nav-EmployeesCompleted" aria-selected="false"><strong>Employees Completed</strong></button>
+            <button class="nav-link" id="nav-EmployeesInProcess-tab" data-bs-toggle="tab" data-bs-target="#nav-EmployeesInProcess" type="button" role="tab" aria-controls="nav-EmployeesInProcess" aria-selected="false"><strong>Employees In Process</strong></button>
         </div>
-    }
-    else
-    {
-        <div class="table-responsive">
-            <table class="table table-striped" style="width:100%">
-                <thead style="background-color:#333130;">
-                    <tr>
-                        <th style="color:white;">File Name</th>
-                        <th style="color:white;">Download File</th>
-                        <th style="color:white;">Delete File</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var file in Model.CourseFileAttachments)
-                    {
-                        <tr>
-                            <td>@file.FileName</td>
-                            <td>
-                                <form asp-controller="Courses" asp-action="DownloadCourseFileAttachment"
-                              asp-route-Id="@file.Id">
-                                    <button type="submit" class="btn btn-info">
-                                        <i class="fa fa-download"></i>
-                                    </button>
-                                </form>
-                            </td>
-                            <td>
-                                <button type="button" data-courseFileAttachmentId="@file.Id" class="btn btn-danger deleteCourseFile">
-                                    <i class="far fa-trash-alt"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+    </nav>
+    <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="nav-User" role="tabpanel" aria-labelledby="nav-User-tab">
+            <br />
+            @if (Model.CourseFileAttachments.Count() == 0)
+            {
+                <div class="alert alert-danger" role="alert">
+                    This course does not have any course content material
+                </div>
+            }
+            else
+            {
+
+                <div class="table-responsive">
+                    <table class="table table-striped" style="width:100%" id="CourseFilesTable">
+                        <thead>
+                            <tr>
+                                <th style="color:black;">File Name</th>
+                                <th style="color:black;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var file in Model.CourseFileAttachments)
+                            {
+                                <tr>
+                                    <td>@file.FileName</td>
+                                    <td>
+                                        <a class="btn btn-info" asp-controller="Courses" asp-action="DownloadCourseFileAttachment"
+                                   asp-route-Id="@file.Id">
+                                            <i class="fa fa-download"></i>
+                                        </a>
+                                        <button type="button" data-courseFileAttachmentId="@file.Id" class="btn btn-danger deleteCourseFile">
+                                            <i class="far fa-trash-alt"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <form asp-controller="Courses" asp-action="DeleteCourseFileAttachment" id="DeleteCourseFileAttachmentForm">
+                    <input type="hidden" id="courseFileAttachmentId" name="courseFileAttachmentId">
+                </form>
+            }
         </div>
-    }
+        <div class="tab-pane fade" id="nav-Role" role="tabpanel" aria-labelledby="nav-Role-tab">
+            <br />
+            @if (Model.EmployeesInCourse.Count() == 0)
+            {
+                <div class="alert alert-danger" role="alert">
+                    There are no employees enrolled in this course
+                </div>
+            }
+            else
+            {
+                <a asp-controller="Courses" asp-action="DownloadEmployeesEnrolledInCourseToExcel" asp-route-CourseId="@Model.CourseDetails.Id" class="btn btn-info"
+               style="float:right;margin-right:10px;">
+                    <i class="fa fa-download"></i> Download to excel
+                </a>
+                <br />
+                <br />
+                <br />
+                <div class="table-responsive">
+                    <table class="table table-striped" style="width:100%" id="EmployeesInCourseTable">
+                        <thead>
+                            <tr>
+                                <th style="color:black;">First Name</th>
+                                <th style="color:black;">Last Name</th>
+                                <th style="color:black;">Department</th>
+                                <th style="color:black;">Position Title</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var employee in Model.EmployeesInCourse)
+                            {
+                                <tr>
+                                    <td>@employee.Employee.FirstName</td>
+                                    <td>@employee.Employee.LastName</td>
+                                    <td>@employee.Employee.Department</td>
+                                    <td>@employee.Employee.PositionTitle</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+        <div class="tab-pane fade" id="nav-EmployeesCompleted" role="tabpanel" aria-labelledby="nav-EmployeesCompleted-tab">
+            <br />
+            @if (Model.EmployeesCompletedCourses.Count() == 0)
+            {
+                <div class="alert alert-danger" role="alert">
+                    There are no employee who have completed this courses
+                </div>
+            }
+            else
+            {
+                    <a asp-controller="Courses" asp-action="DownloadEmployeesWhoCompletedCoursesToExcel" asp-route-courseId="@Model.CourseDetails.Id" class="btn btn-info"
+                   style="float:right;margin-right:10px;">
+                        <i class="fa fa-download"></i> Download to excel
+                    </a>
+                <br />
+                <br />
+                <br />
+                <div class="table-responsive">
+                    <table class="table table-striped" style="width:100%" id="EmployeesInCourseTable">
+                        <thead>
+                            <tr>
+                                <th style="color:black;">First Name</th>
+                                <th style="color:black;">Last Name</th>
+                                <th style="color:black;">Department</th>
+                                <th style="color:black;">Position Title</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var employee in Model.EmployeesCompletedCourses)
+                            {
+                                <tr>
+                                    <td>@employee.Employee.FirstName</td>
+                                    <td>@employee.Employee.LastName</td>
+                                    <td>@employee.Employee.Department</td>
+                                    <td>@employee.Employee.PositionTitle</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+        <div class="tab-pane fade" id="nav-EmployeesInProcess" role="tabpanel" aria-labelledby="nav-EmployeesInProcess-tab">
+            <br />
+            @if (Model.EmployeesInProcessCourses.Count() == 0)
+            {
+                <div class="alert alert-danger" role="alert">
+                    There are no employees doing this courses
+                </div>
+            }
+            else
+            {
+                <a asp-controller="Courses" asp-action="DownloadEmployeesInProccessToExcel" asp-route-CourseId="@Model.CourseDetails.Id" class="btn btn-info"
+               style="float:right;margin-right:10px;">
+                    <i class="fa fa-download"></i> Download to excel
+                </a>
+                <br />
+                <br />
+                <br />
+                <div class="table-responsive">
+                    <table class="table table-striped" style="width:100%" id="EmployeesInCourseTable">
+                        <thead>
+                            <tr>
+                                <th style="color:black;">First Name</th>
+                                <th style="color:black;">Last Name</th>
+                                <th style="color:black;">Department</th>
+                                <th style="color:black;">Position Title</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var employee in Model.EmployeesInProcessCourses)
+                            {
+                                <tr>
+                                    <td>@employee.Employee.FirstName</td>
+                                    <td>@employee.Employee.LastName</td>
+                                    <td>@employee.Employee.Department</td>
+                                    <td>@employee.Employee.PositionTitle</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
 </div>
 <div class="card border border-dark p-1">
     <a asp-controller="Courses" asp-action="Index" class="btn btn-info btn-block mb-1">
