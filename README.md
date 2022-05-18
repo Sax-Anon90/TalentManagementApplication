@@ -25,6 +25,7 @@ Connects to the database using Entity Framework Core with database first approac
 Download the application database Here: [Application Database.zip](https://github.com/Sax-Anon90/TalentManagementApplication/files/8716743/Application.Database.zip)
 
 Uses Non-generic repository and Unit of work pattern with Dependancy Injection
+
 View Models and AutoMapper
 
 Custom Admin Bootstrap Layout found here: https://www.wrappixel.com/templates/ample-admin-lite/
