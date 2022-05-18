@@ -1,6 +1,6 @@
 # Talent Management Application
 
-This is a demo practice ASP.NET Core MVC Application designed for HR Administrators to enroll employees into various different courses or Trainings they 
+This is a demo practice ASP.NET Core MVC Application designed for HR Administrators to enrol employees into various different courses or Trainings they 
 may need in order to upskill themselves or if they want to learn anything new that may be beneficial for them
 
 This application contains: Course Management
