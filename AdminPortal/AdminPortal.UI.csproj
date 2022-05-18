@@ -30,8 +30,4 @@
     <ProjectReference Include="..\AdminPortal.CoreBusiness\AdminPortal.CoreBusiness.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="logs\" />
-  </ItemGroup>
-
 </Project>
