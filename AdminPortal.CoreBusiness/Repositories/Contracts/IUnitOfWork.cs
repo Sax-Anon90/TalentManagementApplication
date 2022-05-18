@@ -1,6 +1,6 @@
 ﻿namespace AdminPortal.CoreBusiness.Repositories.Contracts
 {
-    public interface IUnitOfWork
+    public interface IUnitOfWork : IDisposable
     {
         ICourseCategoryRepository CourseCategoriesRepository { get; }
         ICoursesRepository CoursesRepository { get; }

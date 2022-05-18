@@ -53,5 +53,11 @@ namespace AdminPortal.CoreBusiness.Repositories.Implementation
         {
             await _dbContext.SaveChangesAsync();
         }
+
+        public void Dispose()
+        {
+            _dbContext.Dispose();
+            GC.SuppressFinalize(this);
+        }
     }
 }
