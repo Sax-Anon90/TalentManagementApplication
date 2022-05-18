@@ -5,6 +5,8 @@ using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using AdminPortal.Data.Data;
 using AdminPortal.Common.Models.CoursesViewModels;
+using AdminPortal.Common.Models;
+using AdminPortal.CoreBusiness.Services;
 
 namespace AdminPortal.CoreBusiness.Repositories.Implementation
 {
@@ -13,12 +15,15 @@ namespace AdminPortal.CoreBusiness.Repositories.Implementation
         private readonly SaxTalentManagementContext _dbContext;
         private readonly IMapper _mapper;
         private readonly AutoMapper.IConfigurationProvider _configurationProvider;
+        private readonly IExcelFileService _excelFileService;
         public CourseCategoryRepository(SaxTalentManagementContext _dbContext,
-            IMapper _mapper, AutoMapper.IConfigurationProvider _configurationProvider)
+            IMapper _mapper, AutoMapper.IConfigurationProvider _configurationProvider,
+            IExcelFileService _excelFileService)
         {
             this._dbContext = _dbContext;
             this._mapper = _mapper;
             this._configurationProvider = _configurationProvider;
+            this._excelFileService = _excelFileService; 
 
         }
 
@@ -75,10 +80,21 @@ namespace AdminPortal.CoreBusiness.Repositories.Implementation
 
         public async Task<int> GetTotalNumberOfCoursesInCourseCategory(int courseCategoryId)
         {
-           var totalCoursesInCategory = await _dbContext.CourseCategories
-                .Include(x => x.Courses)
-                .CountAsync(x => x.Id == courseCategoryId);
+           var totalCoursesInCategory = await _dbContext.Courses
+                .Where(x => x.CourseCategoryId == courseCategoryId)
+                .CountAsync();
             return totalCoursesInCategory;
+        }
+
+        public async Task<ExcelFileDownloadProperties> GetAllCoursesInCourseCategoryToExcel(int courseCategoryId)
+        {
+            var CoursesInCourseCategoryData = await _dbContext.Courses
+                .Where(x => x.CourseCategoryId == courseCategoryId)
+                .ProjectTo<CoursesVM>(_configurationProvider)
+                .ToListAsync();
+            var coursesInCourseCategoryExcelFile = await _excelFileService.GenerateExcelFileFromCoursesData(CoursesInCourseCategoryData);
+            return coursesInCourseCategoryExcelFile;
+            
         }
     }
 }

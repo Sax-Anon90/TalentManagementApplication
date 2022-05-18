@@ -34,5 +34,6 @@ namespace AdminPortal.CoreBusiness.Repositories.Contracts
         Task<ExcelFileDownloadProperties> GetAllEmployeesEnrolledInCourseToExcel(int courseId);
         Task<ExcelFileDownloadProperties> GetAllEmployeesWhoCompletedCourseToExcel(int courseId);
         Task<ExcelFileDownloadProperties> GetAllEmployeesInProccessToExcel(int courseId);
+        Task<ExcelFileDownloadProperties> GetAllEmployeeCourseEnrollmentsToExcel(int employeeId);
     }
 }

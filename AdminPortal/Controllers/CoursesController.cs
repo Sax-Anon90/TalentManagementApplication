@@ -145,7 +145,6 @@ namespace AdminPortal.UI.Controllers
                    "We apologize for the inconvenience";
                 return PartialView("_Error");
             }
-
         }
 
         [HttpGet]
@@ -196,20 +195,20 @@ namespace AdminPortal.UI.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteCourseFileAttachment(int courseFileAttachmentId)
+        public async Task<IActionResult> DeleteCourseFileAttachment(int courseFileAttachmentId, int courseId)
         {
             try
             {
                 await _unitOfWork.CourseFileAttachmentsRepository.DeleteCourseFileAttachment(courseFileAttachmentId);
                 await _unitOfWork.SaveChangesAsync();
                 TempData["CourseFileDeleteSuccess"] = "Course File Attachment successfully deleted";
-                return RedirectToAction(nameof(Index), "Courses");
+                return RedirectToAction(nameof(CourseDetailsView), "Courses", new { courseId = courseId });
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error in trying to delete the course file attachment");
                 TempData["CourseFileDeleteFail"] = "Something went wrong. Please try again, if the problem persists, contact the systems administrator";
-                return RedirectToAction(nameof(Index), "Courses");
+                return RedirectToAction(nameof(CourseDetailsView), "Courses", new { courseId = courseId });
             }
         }
 
@@ -414,6 +413,25 @@ namespace AdminPortal.UI.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error in trying to download emplpyees In proccess to excel");
+                TempData["ErrorMessage"] = "Something went wrong with the data request. Please contact the systems Administrator." +
+                  "We apologize for the inconvenience";
+                return PartialView("_Error");
+            }
+        }
+        [HttpGet]
+        public async Task<IActionResult> DownloadCoursesInCourseCategoryToExcel(int courseCategoryId)
+        {
+            try
+            {
+                var coursesInCourseCategoryExcelFile = await _unitOfWork.CourseCategoriesRepository.GetAllCoursesInCourseCategoryToExcel(courseCategoryId);
+                var fileName = coursesInCourseCategoryExcelFile.FileName;
+                var fileType = coursesInCourseCategoryExcelFile.FileType;
+                var fileContent = coursesInCourseCategoryExcelFile.FileContent;
+                return File(fileContent, fileType, fileName);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in trying to download Courses In Course Categpry to excel");
                 TempData["ErrorMessage"] = "Something went wrong with the data request. Please contact the systems Administrator." +
                   "We apologize for the inconvenience";
                 return PartialView("_Error");

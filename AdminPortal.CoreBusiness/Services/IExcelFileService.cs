@@ -14,5 +14,6 @@ namespace AdminPortal.CoreBusiness.Services
         Task<ExcelFileDownloadProperties> GenerateExcelFileFromEmployeeData(ICollection<EmployeeVM> employeeData);
         Task<ExcelFileDownloadProperties> GenerateExcelFileFromCourseEnrollmentsData(ICollection<CourseEnrollmentsVM> courseEnrollmentsData);
         Task<ExcelFileDownloadProperties> GenerateExcelFileFromCoursesData(ICollection<CoursesVM> coursesData);
+        Task<ExcelFileDownloadProperties> GenerateExcelFileForEmployeeCourseEnrollments(ICollection<CourseEnrollmentsVM> EmployeecourseEnrollmentsData);
     }
 }

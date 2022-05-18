@@ -10,6 +10,50 @@
 }
 <br />
 
+
+
+@if (TempData["UpdateEmployeeCourseEnrollmentSuccess"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["UpdateEmployeeCourseEnrollmentSuccess"]
+    </div>
+}
+
+@if (TempData["UpdateEmployeeCourseEnrollmentFail"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["UpdateEmployeeCourseEnrollmentFail"]
+    </div>
+}
+
+@if (TempData["EmployeeEnrollmentDeleteSuccess"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["EmployeeEnrollmentDeleteSuccess"]
+    </div>
+}
+@if (TempData["EmployeeEnrollmentDeleteFail"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["EmployeeEnrollmentDeleteFail"]
+    </div>
+}
+
+@if (TempData["EmployeeFileUploadFail"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["EmployeeFileUploadFail"]
+    </div>
+}
+
+@if (TempData["EmployeeFileDeleteSuccess"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["EmployeeFileDeleteSuccess"]
+    </div>
+}
+
+
 <section class="content">
     <div class="container-fluid">
         <div class="row">
@@ -126,51 +170,47 @@
     <div class="tab-content" id="nav-tabContent">
         <div class="tab-pane fade show active" id="nav-User" role="tabpanel" aria-labelledby="nav-User-tab">
             <br />
-            @if (Model.EmployeeFileAttachmentsVM.Count() == 0)
-            {
-                <div class="alert alert-danger">
-                    There are no files for this employee
-                </div>
-            }
-            else
-            {
-                <div class="table-responsive">
-                    <table class="table table-striped" style="width:100%" id="coursesTable">
-                        <thead>
+            <div class="table-responsive">
+                <table class="table table-striped" style="width:100%" id="coursesTable">
+                    <thead>
+                        <tr>
+                            <th style="color:black;">File Name</th>
+                            <th style="color:black;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var file in Model.EmployeeFileAttachmentsVM)
+                        {
                             <tr>
-                                <th style="color:black;">File Name</th>
-                                <th style="color:black;">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var file in Model.EmployeeFileAttachmentsVM)
-                            {
-                                <tr>
-                                    <td>@file.FileName</td>
-                                    <td>
-                                        <a asp-controller="Employees" asp-action="DownloadEmployeeFileAttachment" asp-route-Id="@file.Id"
+                                <td>@file.FileName</td>
+                                <td>
+                                    <a asp-controller="Employees" asp-action="DownloadEmployeeFileAttachment" asp-route-Id="@file.Id"
                                    class="btn btn-info" style="float:left;margin-left:10px;">
-                                            <i class="fa fa-download"></i>
-                                        </a>
-                                        <button type="button" class="btn btn-danger DeleteEmployeeFileAttachment"
-                                        data-employeeFileAttachmentId="@file.Id" 
-                                        data-employeeIdForDetails="@file.EmployeeId"style="float:left;margin-left:10px;">
-                                            <i class="fa fa-trash"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-                <form asp-controller="Employees" asp-action="DeleteEmployeeFileAttachment" id="DeleteEmployeeFileAttachmentForm">
-                    <input type="hidden" id="employeeFileAttachmentId" name="employeeFileAttachmentId">
-                    <input type="hidden" id="employeeIdForDetails" name="employeeIdForDetails">
-                </form>
-            }
+                                        <i class="fa fa-download"></i>
+                                    </a>
+                                    <button type="button" class="btn btn-danger DeleteEmployeeFileAttachment"
+                                        data-employeeFileAttachmentId="@file.Id"
+                                        data-employeeIdForDetails="@file.EmployeeId" style="float:left;margin-left:10px;">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <form asp-controller="Employees" asp-action="DeleteEmployeeFileAttachment" id="DeleteEmployeeFileAttachmentForm">
+                <input type="hidden" id="employeeFileAttachmentId" name="employeeFileAttachmentId">
+                <input type="hidden" id="employeeIdForDetails" name="employeeIdForDetails">
+            </form>
         </div>
         <div id="UpdateEmployeeCourseEnrollmentPlaceHolderHere"></div>
         <div class="tab-pane fade" id="nav-Role" role="tabpanel" aria-labelledby="nav-Role-tab">
+            <br />
+            <a asp-controller="Employees" asp-action="DownloadEmployeeCourseEnrollmentsToExcel" asp-route-employeeId="@Model.EmployeeDetails.Id"
+               style="float:right;margin-right:10px;" class="btn btn-info">Download to Excel <i class="fas fa-download"></i></a>
+            <br />
+            <br />
             <br />
             <div class="table-responsive">
                 <table class="table table-striped" style="width:100%" id="EmployeesTable">

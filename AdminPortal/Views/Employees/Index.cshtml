@@ -12,24 +12,17 @@
     var totalEnrollments = await _unitOfWork.CoursesEnrollmentsRepository.GetTotalOfAllEnrollments();
 }
 
-<!--#Region TempData Success and failure Messages-->
+
 @if (TempData["EmployeeeAddFail"] != null)
 {
     <div class="alert alert-danger" role="alert">
         @TempData["EmployeeeAddFail"]
     </div>
 }
-
 @if (TempData["EmployeeAddSuccess"] != null)
 {
     <div class="alert alert-success" role="alert">
         @TempData["EmployeeAddSuccess"]
-    </div>
-}
-@if (TempData["EmployeeFileUploadFail"] != null)
-{
-    <div class="alert alert-danger" role="alert">
-        @TempData["EmployeeFileUploadFail"]
     </div>
 }
 @if (TempData["EmployeeFileUploadSuccess"] != null)
@@ -42,12 +35,6 @@
 {
     <div class="alert alert-danger" role="alert">
         @TempData["SearchResultFail"]
-    </div>
-}
-@if (TempData["EmployeeEnrollmentDeleteSuccess"] != null)
-{
-    <div class="alert alert-success" role="alert">
-        @TempData["EmployeeEnrollmentDeleteSuccess"]
     </div>
 }
 @if (TempData["SearchResultSuccess"] != null)
@@ -74,20 +61,20 @@
         @TempData["UpdateEmployeeFail"]
     </div>
 }
-@if (TempData["EmployeeFileDeleteSuccess"] != null)
-{
-    <div class="alert alert-success" role="alert">
-        @TempData["EmployeeFileDeleteSuccess"]
-    </div>
-}
 @if (TempData["EmplyeeUpdateSuccess"] != null)
 {
     <div class="alert alert-success" role="alert">
         @TempData["EmplyeeUpdateSuccess"]
     </div>
 }
-<!--#EndRegion-->
-<!--#Region Info Boxes-->
+@if(TempData["EmployeeDeleteSuccess"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["EmployeeDeleteSuccess"]
+    </div>
+}
+
+
 <section class="content">
     <div class="container-fluid">
         <div class="row">
@@ -129,7 +116,6 @@
         </div>
     </div>
 </section>
-<!--#EndRegion-->
 
 <div class="card border border-dark p-1">
     <div class="card-header bg-dark" style="color:white"><h3>Employee Management <i class="fa fa-users"></i></h3></div>
@@ -257,7 +243,7 @@
                                     <label for="employeefileInput"
                                        class="btn btn-primary EmployeeFileAttachmentData"
                                        data-employeeId="@employee.Id">
-                                        <i class="fa fa-file"></i>
+                                        <i class="fa fa-file"></i> upload
                                     </label>
                                 </td>
                                 <td>
@@ -318,18 +304,18 @@
             </div>
 
             <table class="table table-striped" style="width:100%" id="EmployeesTable">
-                <thead>
+                <thead style="background-color:black">
                     <tr>
-                        <th style="color:black;">
+                        <th style="color:white;">
                             Employee No
                         </th>
-                        <th style="color:black;">
+                        <th style="color:white;">
                             First Name
                         </th>
-                        <th style="color:black;">
+                        <th style="color:white;">
                             Last Name
                         </th>
-                        <th style="color:black;">
+                        <th style="color:white;">
                             Actions
                         </th>
                     </tr>

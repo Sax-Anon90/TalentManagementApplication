@@ -6,6 +6,7 @@
     var totalCoursesInCategory = await _unitOfWork.CourseCategoriesRepository.GetTotalNumberOfCoursesInCourseCategory(@Model.Id);
 }
 <br />
+
 <section class="content">
     <div class="container-fluid">
         <div class="row">
@@ -57,6 +58,14 @@
             }
             else
             {
+                <br />
+                <a asp-controller="Courses" asp-action="DownloadCoursesInCourseCategoryToExcel" asp-route-courseCategoryId="@Model.Id" class="btn btn-info"
+               style="float:right;margin-right:10px;">
+                    <i class="fa fa-download"></i> Download to excel
+                </a>
+                <br />
+                <br />
+                <br />
                 <div class="table-responsive">
                     <table class="table table-striped" style="width:100%" id="CourseCategoriesTable">
                         <thead>

@@ -24,16 +24,15 @@
             </ul>
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item dropdown">
-                    <a class="nav-link" data-toggle="dropdown" href="#">
-                        <span></span><h4>Admin Portal</h4>
+                    <a asp-controller="Home" asp-action="Index">
+                        <h4>Admin Portal</h4>
                     </a>
                 </li>
             </ul>
         </nav>
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
-            <!-- Brand Logo -->
-            <a href="index3.html" class="brand-link">
-                <span class="brand-text font-weight-light">AdminLTE 3</span>
+            <a asp-controller="Home" asp-action="Index" class="brand-link">
+                <span class="brand-text font-weight-light">Admin Portal</span>
             </a>
             <div class="sidebar">
                 <nav class="mt-2">

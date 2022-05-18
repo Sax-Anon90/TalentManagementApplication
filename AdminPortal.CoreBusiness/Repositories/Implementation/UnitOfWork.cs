@@ -20,7 +20,7 @@ namespace AdminPortal.CoreBusiness.Repositories.Implementation
             this._excelFileService = _excelFileService;
 
             //Courses Repositories
-            CourseCategoriesRepository = new CourseCategoryRepository(_dbContext, _mapper, _configurationProvider);
+            CourseCategoriesRepository = new CourseCategoryRepository(_dbContext, _mapper, _configurationProvider, _excelFileService);
             CoursesRepository = new CoursesRepository(_dbContext, _mapper, _configurationProvider, _excelFileService);
             CourseFileAttachmentsRepository = new CourseFileAttachmentRepository(_dbContext, _mapper, _configurationProvider);
             CoursesEnrollmentsRepository = new CourseEnrollmentsRepository(_dbContext, _mapper, _configurationProvider, CoursesRepository, _excelFileService);

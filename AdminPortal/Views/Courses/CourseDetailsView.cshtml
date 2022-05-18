@@ -11,6 +11,18 @@
 }
 
 <br />
+@if (TempData["CourseFileDeleteSuccess"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["CourseFileDeleteSuccess"]
+    </div>
+}
+@if (TempData["CourseFileDeleteFail"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["CourseFileDeleteFail"]
+    </div>
+}
 <section class="content">
     <div class="container-fluid">
         <div class="row">
@@ -133,7 +145,8 @@
                         </tbody>
                     </table>
                 </div>
-                <form asp-controller="Courses" asp-action="DeleteCourseFileAttachment" id="DeleteCourseFileAttachmentForm">
+                <form asp-controller="Courses" asp-action="DeleteCourseFileAttachment" asp-route-courseId="@Model.CourseDetails.Id"
+                  id="DeleteCourseFileAttachmentForm">
                     <input type="hidden" id="courseFileAttachmentId" name="courseFileAttachmentId">
                 </form>
             }
@@ -190,10 +203,10 @@
             }
             else
             {
-                    <a asp-controller="Courses" asp-action="DownloadEmployeesWhoCompletedCoursesToExcel" asp-route-courseId="@Model.CourseDetails.Id" class="btn btn-info"
-                   style="float:right;margin-right:10px;">
-                        <i class="fa fa-download"></i> Download to excel
-                    </a>
+                <a asp-controller="Courses" asp-action="DownloadEmployeesWhoCompletedCoursesToExcel" asp-route-courseId="@Model.CourseDetails.Id" class="btn btn-info"
+               style="float:right;margin-right:10px;">
+                    <i class="fa fa-download"></i> Download to excel
+                </a>
                 <br />
                 <br />
                 <br />

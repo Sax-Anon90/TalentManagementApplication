@@ -222,5 +222,13 @@ namespace AdminPortal.CoreBusiness.Repositories.Implementation
             var employeesInProccessData = await _excelFileService.GenerateExcelFileFromCourseEnrollmentsData(employeesInProccess);
             return employeesInProccessData;
         }
+
+        public async Task<ExcelFileDownloadProperties> GetAllEmployeeCourseEnrollmentsToExcel(int employeeId)
+        {
+            var employeeCourseEnrollments = await GetAllEmployeeCourseEnrollments(employeeId);
+            var employeeCourseEnrollmentsData = await _excelFileService.GenerateExcelFileForEmployeeCourseEnrollments(employeeCourseEnrollments);
+            return employeeCourseEnrollmentsData;
+
+        }
     }
 }

@@ -12,6 +12,39 @@ namespace AdminPortal.CoreBusiness.Services
 {
     public class ExcelFileService : IExcelFileService
     {
+        public async Task<ExcelFileDownloadProperties> GenerateExcelFileForEmployeeCourseEnrollments(ICollection<CourseEnrollmentsVM> EmployeecourseEnrollmentsData)
+        {
+            using (var workbook = new XLWorkbook())
+            {
+                var worksheet = workbook.Worksheets.Add("ExcelFileResult");
+                int currentRow = 1;
+                worksheet.Cell(currentRow, 1).Value = "Course";
+                worksheet.Cell(currentRow, 2).Value = "CourseCategory";
+                worksheet.Cell(currentRow, 3).Value = "Status";
+
+                foreach (var data in EmployeecourseEnrollmentsData)
+                {
+                    currentRow++;
+                    worksheet.Cell(currentRow, 1).Value = data.Course.CourseName;
+                    worksheet.Cell(currentRow, 2).Value = data.Course.CourseCategory.CategoryName;
+                    worksheet.Cell(currentRow, 3).Value = data.Status;
+                }
+
+                using (var stream = new MemoryStream())
+                {
+                    workbook.SaveAs(stream);
+                    var content = stream.ToArray();
+                    var ExcelFile = new ExcelFileDownloadProperties()
+                    {
+                        FileName = "ExcelFileResult.xlsx",
+                        FileType = "application/vnd.openxmlformats-officedocument.spreadsheet.sheet",
+                        FileContent = content
+                    };
+                    return ExcelFile;
+                }
+            }
+        }
+
         public async Task<ExcelFileDownloadProperties> GenerateExcelFileFromCourseEnrollmentsData(ICollection<CourseEnrollmentsVM> courseEnrollmentsData)
         {
             using (var workbook = new XLWorkbook())
@@ -82,7 +115,6 @@ namespace AdminPortal.CoreBusiness.Services
                 }
             }
         }
-
 
         public async Task<ExcelFileDownloadProperties> GenerateExcelFileFromEmployeeData(ICollection<EmployeeVM> employeeData)
         {

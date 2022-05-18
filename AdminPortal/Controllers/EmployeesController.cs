@@ -90,7 +90,7 @@ namespace AdminPortal.UI.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error in trying to upload an employee File.");
-                TempData["EmployeeFileUploadSuccess"] = "Something went wrong. Please try again.If the problem persists, Please contact the systems administrator";
+                TempData["EmployeeFileUploadFail"] = "Something went wrong. Please try again.If the problem persists, Please contact the systems administrator";
                 return RedirectToAction(nameof(Index), "Employees");
             }
 
@@ -395,6 +395,26 @@ namespace AdminPortal.UI.Controllers
                 _logger.LogError(ex, "Error in Updating Employee course Enrollment");
                 TempData["UpdateEmployeeCourseEnrollmentFail"] = "Something went wrong. Please try again. If the problem persists, contact the systems administrator";
                 return RedirectToAction(nameof(Index), "Employees");
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DownloadEmployeeCourseEnrollmentsToExcel(int employeeId)
+        {
+            try
+            {
+                var employeeExcelFile = await _unitOfWork.CoursesEnrollmentsRepository.GetAllEmployeeCourseEnrollmentsToExcel(employeeId);
+                var fileName = employeeExcelFile.FileName;
+                var fileType = employeeExcelFile.FileType;
+                var fileContent = employeeExcelFile.FileContent;
+                return File(fileContent, fileType, fileName);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in Downloading all employees to excel");
+                TempData["ErrorMessage"] = "Something went wrong with the data request. Please contact the systems Administrator." +
+                  "We apologize for the inconvenience";
+                return PartialView("_Error");
             }
         }
 
