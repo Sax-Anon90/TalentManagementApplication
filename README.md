@@ -30,3 +30,4 @@ View Models and AutoMapper
 
 Custom Admin Bootstrap Layout found here: https://www.wrappixel.com/templates/ample-admin-lite/
 
+Logging using SeriLog
