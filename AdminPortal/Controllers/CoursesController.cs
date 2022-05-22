@@ -24,12 +24,11 @@ namespace AdminPortal.UI.Controllers
 
             try
             {
-                var courses = await _unitOfWork.CoursesRepository.GetAllCourses();
                 var courseCategories = await _unitOfWork.CourseCategoriesRepository.GetAllCourseCategories();
                 var CourseAndCourseCategoryModel = new CoursesAndCourseCategoriesVM()
                 {
-                    CoursesViewModel = courses,
-                    CourseCategoriesViewModel = courseCategories,
+                    CoursesViewModel = await _unitOfWork.CoursesRepository.GetAllCourses(),
+                    CourseCategoriesViewModel = await _unitOfWork.CourseCategoriesRepository.GetAllCourseCategories(),
                     CourseCreateViewModel = new CourseCreateViewModel
                     {
                         CourseCategories = new SelectList(courseCategories, "Id", "CategoryName")
@@ -100,21 +99,15 @@ namespace AdminPortal.UI.Controllers
         [HttpGet]
         public async Task<IActionResult> CourseDetailsView(int? courseId)
         {
-
             try
             {
-                var courseDetails = await _unitOfWork.CoursesRepository.GetCourseDetails(courseId);
-                var courseFileAttachments = await _unitOfWork.CourseFileAttachmentsRepository.GetAllCourseFileAttachmentsById(courseId);
-                var employeesInCourse = await _unitOfWork.CoursesEnrollmentsRepository.GetAllEmployeesEnrolledInCourse(courseId);
-                var EmployeesCompletedCourses = await _unitOfWork.CoursesEnrollmentsRepository.GetAllCoursesCompletedByEmployee(courseId);
-                var EmployeesInProcessCourses = await _unitOfWork.CoursesEnrollmentsRepository.GetAllCoursesInProcessByEmployee(courseId);
                 var CourseDetailsAndCourseFiles = new CourseDetailsAndCourseFilesVM
                 {
-                    CourseDetails = courseDetails,
-                    CourseFileAttachments = courseFileAttachments,
-                    EmployeesInCourse = employeesInCourse,
-                    EmployeesCompletedCourses = EmployeesCompletedCourses,
-                    EmployeesInProcessCourses = EmployeesInProcessCourses
+                    CourseDetails = await _unitOfWork.CoursesRepository.GetCourseDetails(courseId),
+                    CourseFileAttachments = await _unitOfWork.CourseFileAttachmentsRepository.GetAllCourseFileAttachmentsById(courseId),
+                    EmployeesInCourse = await _unitOfWork.CoursesEnrollmentsRepository.GetAllEmployeesEnrolledInCourse(courseId),
+                    EmployeesCompletedCourses = await _unitOfWork.CoursesEnrollmentsRepository.GetAllCoursesCompletedByEmployee(courseId),
+                    EmployeesInProcessCourses = await _unitOfWork.CoursesEnrollmentsRepository.GetAllCoursesInProcessByEmployee(courseId)
 
                 };
                 return View("CourseDetailsView", CourseDetailsAndCourseFiles);
@@ -150,7 +143,6 @@ namespace AdminPortal.UI.Controllers
         [HttpGet]
         public async Task<PartialViewResult> UpdateCoursePopUpView(int? courseId)
         {
-
             try
             {
                 var course = await _unitOfWork.CoursesRepository.GetCourseDetails(courseId);
@@ -290,7 +282,6 @@ namespace AdminPortal.UI.Controllers
                    "We apologize for the inconvenience";
                 return PartialView("_Error");
             }
-
         }
 
         [HttpPost]
