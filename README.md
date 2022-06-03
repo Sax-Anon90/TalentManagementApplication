@@ -20,6 +20,7 @@ This application contains: Employee Management Section
                         Update Employee Details
                         Download Employees to excel
                         Remove Employees
+                        Enrol employees to Courses
                         
 This application contains: User Management Section
 
@@ -45,7 +46,7 @@ Use The following Email and Password to Authenticate into the application:
                                           Password: P@ssword123
 
 Connects to the database using Entity Framework Core with database first approach.
-Download the application database Here: [Application Database.zip](https://github.com/Sax-Anon90/TalentManagementApplication/files/8716743/Application.Database.zip)
+Download the application database Here: [Application Database.zip](https://github.com/Sax-Anon90/TalentManagementApplication/files/8832314/Application.Database.zip)
 
 Uses Non-generic repository and Unit of work pattern with Dependancy Injection
 
