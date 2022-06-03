@@ -46,7 +46,7 @@ Use The following Email and Password to Authenticate into the application:
                                           Password: P@ssword123
 
 Connects to the database using Entity Framework Core with database first approach.
-Download the application database Here: [Application Database.zip](https://github.com/Sax-Anon90/TalentManagementApplication/files/8832314/Application.Database.zip)
+Download the application database Here: [Application Database.zip](https://github.com/Sax-Anon90/TalentManagementApplication/files/8832314/Application.Database.zip). Please ensure that you run this script as is and make sure to insert the data into the tables as well
 
 Uses Non-generic repository and Unit of work pattern with Dependancy Injection
 
