@@ -58,13 +58,17 @@
             }
             else
             {
-                <br />
-                <a asp-controller="Courses" asp-action="DownloadCoursesInCourseCategoryToExcel" asp-route-courseCategoryId="@Model.Id" class="btn btn-info"
-               style="float:right;margin-right:10px;">
-                    <i class="fa fa-download"></i> Download to excel
-                </a>
-                <br />
-                <br />
+                @if (User.IsInRole(Roles.HRAdmin) || User.IsInRole(Roles.SuperAdmin))
+                {
+                    <br />
+                    <a asp-controller="Courses" asp-action="DownloadCoursesInCourseCategoryToExcel" asp-route-courseCategoryId="@Model.Id" class="btn btn-info"
+                    style="float:right;margin-right:10px;">
+                        <i class="fa fa-download"></i> Download to excel
+                    </a>
+                    <br />
+                    <br />
+                }
+
                 <br />
                 <div class="table-responsive">
                     <table class="table table-striped" style="width:100%" id="CourseCategoriesTable">

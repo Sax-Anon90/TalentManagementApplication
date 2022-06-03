@@ -75,7 +75,7 @@ namespace AdminPortal.CoreBusiness.Repositories.Implementation
 
         public async Task<int> GetTotalNumberOfEmployees()
         {
-            var totalEmployees = await _dbContext.Employees.CountAsync();
+            var totalEmployees = await _dbContext.Employees.AsNoTracking().CountAsync();
             return totalEmployees;
         }
 

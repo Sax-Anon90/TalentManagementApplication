@@ -1,7 +1,5 @@
 ﻿@model EmployeeAndEmployeeTrainingVM
 
-<br />
-
 @inject IUnitOfWork _unitOfWork
 
 @{
@@ -11,7 +9,7 @@
     var totalEmployeeFiles = await _unitOfWork.EmployeeFileAttachmentsRepository.GetTotalOfAllEmployeeFiles();
     var totalEnrollments = await _unitOfWork.CoursesEnrollmentsRepository.GetTotalOfAllEnrollments();
 }
-
+<br />
 
 @if (TempData["EmployeeeAddFail"] != null)
 {
@@ -67,7 +65,7 @@
         @TempData["EmplyeeUpdateSuccess"]
     </div>
 }
-@if(TempData["EmployeeDeleteSuccess"] != null)
+@if (TempData["EmployeeDeleteSuccess"] != null)
 {
     <div class="alert alert-success">
         @TempData["EmployeeDeleteSuccess"]
@@ -122,91 +120,96 @@
     <nav>
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
             <button class="nav-link active" id="nav-User-tab" data-bs-toggle="tab" data-bs-target="#nav-User" type="button" role="tab" aria-controls="nav-User" aria-selected="true"><strong>Employees</strong></button>
-            <button class="nav-link" id="nav-Role-tab" data-bs-toggle="tab" data-bs-target="#nav-Role" type="button" role="tab" aria-controls="nav-Role" aria-selected="false"><strong>Employee Training</strong></button>
+            @if (User.IsInRole(Roles.HRAdmin) || User.IsInRole(Roles.SuperAdmin))
+            {
+                <button class="nav-link" id="nav-Role-tab" data-bs-toggle="tab" data-bs-target="#nav-Role" type="button" role="tab" aria-controls="nav-Role" aria-selected="false"><strong>Employee Training</strong></button>
+            }
         </div>
     </nav>
     <div class="tab-content" id="nav-tabContent">
         <div class="tab-pane fade show active" id="nav-User" role="tabpanel" aria-labelledby="nav-User-tab">
             <br />
-            <button type="button" data-bs-toggle="modal" data-bs-target="#addEmployeeModal" class="btn btn-success"
+            @if (User.IsInRole(Roles.HRAdmin) || User.IsInRole(Roles.SuperAdmin))
+            {
+                <button type="button" data-bs-toggle="modal" data-bs-target="#addEmployeeModal" class="btn btn-success"
                     style="float:left;margin-left:10px;">
-                <i class="fa fa-plus"></i> Add Employee
-            </button>
-            <a asp-controller="Employees" asp-action="DownloadTotalEmployeesToExcel"
+                    <i class="fa fa-plus"></i> Add Employee
+                </button>
+                <a asp-controller="Employees" asp-action="DownloadTotalEmployeesToExcel"
                style="float:right;margin-right:10px;" class="btn btn-info">Download to Excel <i class="fas fa-download"></i></a>
-            <br />
-            <br />
-            <br />
+                <br />
+                <br />
 
-            <!-- Add New Employee Modal Pop up View Begin-->
-            <div class="modal fade" id="addEmployeeModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Add new Course</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form asp-controller="Employees" asp-action="AddNewEmployee">
-                                <label style="color:black" class="col-form-label">
-                                    <strong>
-                                        @Html.DisplayNameFor(model => model.EmployeeCreateViewModel.EmployeeNo) (Required)
-                                    </strong>
-                                </label>
-                                <input asp-for="EmployeeCreateViewModel.EmployeeNo" class="form-control">
-                                <label style="color:black" class="col-form-label">
-                                    <strong>
-                                        @Html.DisplayNameFor(model => model.EmployeeCreateViewModel.FirstName) (Required)
-                                    </strong>
-                                </label>
-                                <input asp-for="EmployeeCreateViewModel.FirstName" class="form-control">
-                                <label style="color:black" class="col-form-label">
-                                    <strong>
-                                        @Html.DisplayNameFor(model => model.EmployeeCreateViewModel.LastName) (Required)
-                                    </strong>
-                                </label>
-                                <input asp-for="EmployeeCreateViewModel.LastName" class="form-control">
-                                <label style="color:black" class="col-form-label">
-                                    <strong>
-                                        @Html.DisplayNameFor(model => model.EmployeeCreateViewModel.Gender) (Required)
-                                    </strong>
-                                </label>
-                                <select asp-for="EmployeeCreateViewModel.Gender" class="form-select">
-                                    <option disabled>--Select Gender--</option>
-                                    @foreach (var gender in Genders)
-                                    {
-                                        <option>@gender.Gender1</option>
-                                    }
-                                </select>
-                                <label style="color:black" class="col-form-label">
-                                    <strong>
-                                        @Html.DisplayNameFor(model => model.EmployeeCreateViewModel.Department) (Required)
-                                    </strong>
-                                </label>
-                                <select asp-for="EmployeeCreateViewModel.Department" class="form-select">
-                                    <option disabled>--Select Department--</option>
-                                    @foreach (var department in Departments)
-                                    {
-                                        <option>@department.Department1</option>
-                                    }
-                                </select>
-                                <label style="color:black" class="col-form-label">
-                                    <strong>
-                                        @Html.DisplayNameFor(model => model.EmployeeCreateViewModel.PositionTitle) (Required)
-                                    </strong>
-                                </label>
-                                <input asp-for="EmployeeCreateViewModel.PositionTitle" class="form-control">
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button type="submit" onclick="AddNewEmployee()" class="btn btn-primary">Add Employee</button>
-                                </div>
-                            </form>
+                <br />
+                <!-- Add New Employee Modal Pop up View Begin-->
+                <div class="modal fade" id="addEmployeeModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Add new Course</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form asp-controller="Employees" asp-action="AddNewEmployee">
+                                    <label style="color:black" class="col-form-label">
+                                        <strong>
+                                            @Html.DisplayNameFor(model => model.EmployeeCreateViewModel.EmployeeNo) (Required)
+                                        </strong>
+                                    </label>
+                                    <input asp-for="EmployeeCreateViewModel.EmployeeNo" class="form-control">
+                                    <label style="color:black" class="col-form-label">
+                                        <strong>
+                                            @Html.DisplayNameFor(model => model.EmployeeCreateViewModel.FirstName) (Required)
+                                        </strong>
+                                    </label>
+                                    <input asp-for="EmployeeCreateViewModel.FirstName" class="form-control">
+                                    <label style="color:black" class="col-form-label">
+                                        <strong>
+                                            @Html.DisplayNameFor(model => model.EmployeeCreateViewModel.LastName) (Required)
+                                        </strong>
+                                    </label>
+                                    <input asp-for="EmployeeCreateViewModel.LastName" class="form-control">
+                                    <label style="color:black" class="col-form-label">
+                                        <strong>
+                                            @Html.DisplayNameFor(model => model.EmployeeCreateViewModel.Gender) (Required)
+                                        </strong>
+                                    </label>
+                                    <select asp-for="EmployeeCreateViewModel.Gender" class="form-select">
+                                        <option disabled>--Select Gender--</option>
+                                        @foreach (var gender in Genders)
+                                        {
+                                            <option>@gender.Gender1</option>
+                                        }
+                                    </select>
+                                    <label style="color:black" class="col-form-label">
+                                        <strong>
+                                            @Html.DisplayNameFor(model => model.EmployeeCreateViewModel.Department) (Required)
+                                        </strong>
+                                    </label>
+                                    <select asp-for="EmployeeCreateViewModel.Department" class="form-select">
+                                        <option disabled>--Select Department--</option>
+                                        @foreach (var department in Departments)
+                                        {
+                                            <option>@department.Department1</option>
+                                        }
+                                    </select>
+                                    <label style="color:black" class="col-form-label">
+                                        <strong>
+                                            @Html.DisplayNameFor(model => model.EmployeeCreateViewModel.PositionTitle) (Required)
+                                        </strong>
+                                    </label>
+                                    <input asp-for="EmployeeCreateViewModel.PositionTitle" class="form-control">
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" onclick="AddNewEmployee()" class="btn btn-primary">Add Employee</button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <!-- Add New Employee Modal Pop up View End-->
-
+                <!-- Add New Employee Modal Pop up View End-->
+            }
             <div class="table-responsive">
                 <div id="EmployeeUpdatePlaceHolderHere"></div>
                 <table class="table" style="width:100%" id="EmployeesTable">
@@ -218,9 +221,12 @@
                             <th style="color:black;">
                                 @Html.DisplayNameFor(model => model.EmployeeCreateViewModel.LastName)
                             </th>
-                            <th style="color:black;">
-                                Employee File
-                            </th>
+                            @if (User.IsInRole(Roles.HRAdmin) || User.IsInRole(Roles.SuperAdmin))
+                            {
+                                <th style="color:black;">
+                                    Employee File
+                                </th>
+                            }
                             <th style="color:black;">
                                 @Html.DisplayNameFor(model => model.EmployeeCreateViewModel.PositionTitle)
                             </th>
@@ -239,13 +245,16 @@
                                 <td>
                                     @Html.DisplayFor(modelItem => employee.LastName)
                                 </td>
-                                <td>
-                                    <label for="employeefileInput"
+                                @if (User.IsInRole(Roles.HRAdmin) || User.IsInRole(Roles.SuperAdmin))
+                                {
+                                    <td>
+                                        <label for="employeefileInput"
                                        class="btn btn-primary EmployeeFileAttachmentData"
                                        data-employeeId="@employee.Id">
-                                        <i class="fa fa-file"></i> upload
-                                    </label>
-                                </td>
+                                            <i class="fa fa-file"></i> upload
+                                        </label>
+                                    </td>
+                                }
                                 <td>
                                     @Html.DisplayFor(modelItem => employee.PositionTitle)
                                 </td>
@@ -254,90 +263,97 @@
                                    class="btn btn-info" style="float:left;margin-left:10px;">
                                         <i class="fa fa-info-circle"></i>
                                     </a>
-                                    <button type="button" data-bs-toggle="modal employeeModal" data-bs-target="#updateEmployeeModal"
+                                    @if (User.IsInRole(Roles.HRAdmin) || User.IsInRole(Roles.SuperAdmin))
+                                    {
+                                        <button type="button" data-bs-toggle="modal employeeModal" data-bs-target="#updateEmployeeModal"
                                         data-url="@Url.Action("UpdateEmployeePopUpView","Employees", new{employeeId = @employee.Id})" class="btn btn-warning" style="float:left;margin-left:10px;">
-                                        <i class="fa fa-pencil"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-danger  DeleteEmployeebtn"
+                                            <i class="fa fa-pencil"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-danger  DeleteEmployeebtn"
                                         data-employeeNo="@employee.EmployeeNo" style="float:left;margin-left:10px;">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    }
                                 </td>
                             </tr>
                         }
                     </tbody>
                 </table>
             </div>
-
-            <!--Upload Employee File Attachment Form begin-->
-            <form enctype="multipart/form-data" asp-controller="Employees" asp-action="UploadEmployeeFileAttachment" id="UploadEmployeeFileAttatchmentForm">
-                <input asp-for="EmployeeFileAttachment.employeeFileAttachment" type="file" class="EmployeeAttatchmentFileData" style="display: none"
+            @if (User.IsInRole(Roles.HRAdmin) || User.IsInRole(Roles.SuperAdmin))
+            {
+                <!--Upload Employee File Attachment Form begin-->
+                <form enctype="multipart/form-data" asp-controller="Employees" asp-action="UploadEmployeeFileAttachment" id="UploadEmployeeFileAttatchmentForm">
+                    <input asp-for="EmployeeFileAttachment.employeeFileAttachment" type="file" class="EmployeeAttatchmentFileData" style="display: none"
                        id="employeefileInput" />
-                <input type="hidden" id="employeeId" name="employeeId" />
-            </form>
-            <!--Upload Employee File Attachment Form End-->
-            <!--Delete Employee Form begin-->
-            <form asp-controller="Employees" asp-action="DeleteEmployee" id="DeleteEmployeeForm">
-                <input type="hidden" id="employeeNo" name="employeeNo">
-            </form>
-            <!--Delete Employee Form begin-->
-
+                    <input type="hidden" id="employeeId" name="employeeId" />
+                </form>
+                <!--Upload Employee File Attachment Form End-->
+                <!--Delete Employee Form begin-->
+                <form asp-controller="Employees" asp-action="DeleteEmployee" id="DeleteEmployeeForm">
+                    <input type="hidden" id="employeeNo" name="employeeNo">
+                </form>
+                <!--Delete Employee Form begin-->
+            }
         </div>
-        <div class="tab-pane fade" id="nav-Role" role="tabpanel" aria-labelledby="nav-Role-tab">
-            <br />
-            <form asp-controller="Employees" asp-action="SearchEmployee" id="searchForm">
-                <div class="row">
-                    <div class="col-8">
-                        <input asp-for="EmployeeSearchResult.EmployeeNo" placeholder="Employee Number" class="form-control ml-2" />
-                        <br />
+        @if (User.IsInRole(Roles.HRAdmin) || User.IsInRole(Roles.SuperAdmin))
+        {
+            <div class="tab-pane fade" id="nav-Role" role="tabpanel" aria-labelledby="nav-Role-tab">
+                <br />
+                <form asp-controller="Employees" asp-action="SearchEmployee" id="searchForm">
+                    <div class="row">
+                        <div class="col-8">
+                            <input asp-for="EmployeeSearchResult.EmployeeNo" placeholder="Employee Number" class="form-control ml-2" />
+                            <br />
+                        </div>
+                        <div class="col-4">
+                            <button onclick="SearchEmployee()" type="submit" data-bs-toggle="modal" data-bs-target="#addEmployee" class="btn btn-success">
+                                <i class="fa fa-search"></i> search
+                            </button>
+                        </div>
                     </div>
-                    <div class="col-4">
-                        <button onclick="SearchEmployee()" type="submit" data-bs-toggle="modal" data-bs-target="#addEmployee" class="btn btn-success">
-                            <i class="fa fa-search"></i> search
-                        </button>
-                    </div>
+                </form>
+                <div id="courseEnrolPlaceHolderHere"></div>
+                <div class="pl-1">
+                    <h4>Search result</h4>
                 </div>
-            </form>
-            <div id="courseEnrolPlaceHolderHere"></div>
-            <div class="pl-1">
-                <h4>Search result</h4>
-            </div>
 
-            <table class="table table-striped" style="width:100%" id="EmployeesTable">
-                <thead style="background-color:black">
-                    <tr>
-                        <th style="color:white;">
-                            Employee No
-                        </th>
-                        <th style="color:white;">
-                            First Name
-                        </th>
-                        <th style="color:white;">
-                            Last Name
-                        </th>
-                        <th style="color:white;">
-                            Actions
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (Model.EmployeeSearchResult is not null)
-                    {
+                <table class="table table-striped" style="width:100%" id="EmployeesTable">
+                    <thead style="background-color:black">
                         <tr>
-                            <td>@Model.EmployeeSearchResult.EmployeeNo</td>
-                            <td>@Model.EmployeeSearchResult.FirstName</td>
-                            <td>@Model.EmployeeSearchResult.LastName</td>
-                            <td>
-                                <a onclick="EnrolCourseDetails()" asp-controller="Employees" asp-action="EnrolEmployeeToCourseView" asp-route-employeeId="@Model.EmployeeSearchResult.Id" class="btn btn-info" style="float:left;margin-left:10px;">
-                                    <i class="fa fa-graduation-cap"></i> enrol
-                                </a>
-                            </td>
+                            <th style="color:white;">
+                                Employee No
+                            </th>
+                            <th style="color:white;">
+                                First Name
+                            </th>
+                            <th style="color:white;">
+                                Last Name
+                            </th>
+                            <th style="color:white;">
+                                Actions
+                            </th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @if (Model.EmployeeSearchResult is not null)
+                        {
+                            <tr>
+                                <td>@Model.EmployeeSearchResult.EmployeeNo</td>
+                                <td>@Model.EmployeeSearchResult.FirstName</td>
+                                <td>@Model.EmployeeSearchResult.LastName</td>
+                                <td>
+                                    <a onclick="EnrolCourseDetails()" asp-controller="Employees" asp-action="EnrolEmployeeToCourseView" asp-route-employeeId="@Model.EmployeeSearchResult.Id" class="btn btn-info" style="float:left;margin-left:10px;">
+                                        <i class="fa fa-graduation-cap"></i> enrol
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
 
-        </div>
+            </div>
+        }
     </div>
 </div>
 

@@ -1,0 +1,48 @@
+﻿@model LoginViewModel
+<br />
+
+@if (TempData["SetUpPasswordSuccess"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SetUpPasswordSuccess"]
+    </div>
+}
+
+<br />
+<div class="card text-dark mb-3">
+    <div class="card-header bg-dark">
+        <h2 style="color:white">Login</h2>
+    </div>
+    <br />
+    <div class="card-body">
+        <div class="tab-pane fade show active" id="pills-login" role="tabpanel" aria-labelledby="tab-login">
+            <form asp-controller="Authentication" asp-action="Login">
+                <input asp-for="ReturnUrl" type="hidden" class="form-control/">
+                <div class="form-outline mb-4">
+                    <label style="color:black" class="form-label">
+                        @Html.DisplayNameFor(model => model.Email)
+                    </label>
+                    <input asp-for="Email" class="form-control" />
+                </div>
+                <div class="form-outline mb-4">
+                    <label style="color:black" class="form-label" for="loginPassword">
+                        @Html.DisplayNameFor(model => model.Password)
+                    </label>
+                    <input asp-for="Password" class="form-control" />
+                </div>
+                <button type="submit" onclick="Login()" class="btn btn-success form-control">Login</button>
+                <br />
+                <br />
+                <br />
+                <p>Are you a new user? <a asp-controller="Authentication" asp-action="RegistrationView">Click here to complete your registration</a></p>
+            </form>
+        </div>
+    </div>
+</div>
+<br />
+@if (TempData["LoginErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["LoginErrorMessage"]
+    </div>
+}

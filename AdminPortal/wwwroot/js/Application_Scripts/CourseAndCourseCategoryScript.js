@@ -31,6 +31,18 @@ function CourseDetailsView() {
     });
 }
 
+function CourseCategoryDetailsView()
+{
+    swal.fire({
+        text: "Loading Course Category Details. Please wait ...",
+        showConfirmButton: false,
+        allowOutsideClick: false,
+        didOpen: () => {
+            swal.showLoading();
+        }
+    });
+}
+
 var courseId;
 $(function () {
     $(document).on('mouseenter', '.CourseFileAttachmentData', function (event) {

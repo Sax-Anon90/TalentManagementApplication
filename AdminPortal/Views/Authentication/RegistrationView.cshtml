@@ -1,0 +1,41 @@
+﻿@model RegistrationViewModel
+<br />
+<br />
+<div class="card text-dark mb-3">
+    <div class="card-header bg-dark">
+        <h2 style="color:white">Registration</h2>
+    </div>
+    <br />
+    <div class="card-body">
+        <div class="tab-pane fade show active" id="pills-login" role="tabpanel" aria-labelledby="tab-login">
+            <form asp-controller="Authentication" asp-action="CheckIfUserExists">
+                <div class="form-outline mb-4">
+                    <label style="color:black" class="form-label">
+                        @Html.DisplayNameFor(model => model.employeeNo)
+                    </label>
+                    <input asp-for="employeeNo" class="form-control" />
+                </div>
+                <div class="form-outline mb-4">
+                    <label style="color:black" class="form-label">
+                        @Html.DisplayNameFor(model => model.Email)
+                    </label>
+                    <input asp-for="Email" class="form-control" />
+                </div>
+                <button type="submit" onclick="CheckIfUserExists()" class="btn btn-success form-control">Check</button>
+            </form>
+        </div>
+    </div>
+</div>
+<br />
+<div class="card border border-dark p-1">
+    <a asp-controller="Authentication" asp-action="Index" class="btn btn-info btn-block mb-1">
+        <i class="fa fa-users"></i> Back to Login Page
+    </a>
+</div>
+<br/>
+@if (TempData["UserExistsFail"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["UserExistsFail"]
+    </div>
+}

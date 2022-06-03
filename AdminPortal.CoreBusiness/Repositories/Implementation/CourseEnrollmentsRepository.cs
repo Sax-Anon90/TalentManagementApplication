@@ -44,13 +44,13 @@ namespace AdminPortal.CoreBusiness.Repositories.Implementation
         public async Task<CourseEnrollmentsVM> GetCoursesNotEnrolledByEmployee(int? employeeId)
         {
             var allCourses = await _coursesRepository.GetAllCourses();
-            var courseEnrollments = GetAllEmployeeCourseEnrollments(employeeId);
+            var courseEnrollments = await GetAllEmployeeCourseEnrollments(employeeId);
 
             /*
               From all the courses in the courses table, select only the one's the employee has not yet enrolled in
              */
             var coursesNotEnrolledByEmployee = allCourses.Select(x => x.CourseName)
-                .Where(x => !courseEnrollments.Result.Select(x => x.Course.CourseName).Any(y => x.Contains(y)));
+                .Where(x => !courseEnrollments.Select(x => x.Course.CourseName).Any(y => x.Contains(y)));
 
             //This means the employee has enrolled in all courses
             if (coursesNotEnrolledByEmployee.Count() is 0 || coursesNotEnrolledByEmployee is null)

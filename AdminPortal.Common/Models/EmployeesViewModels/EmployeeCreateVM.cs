@@ -20,7 +20,6 @@ namespace AdminPortal.Common.Models.EmployeesViewModels
         [Display(Name = "Position Title")]
         public string? PositionTitle { get; set; }
 
-
         public bool Validation()
         {
             if(EmployeeNo is null || FirstName is null || LastName is null ||

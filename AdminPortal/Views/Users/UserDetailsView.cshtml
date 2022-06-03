@@ -1,0 +1,121 @@
+﻿@model UserAndRolesViewModel
+@inject IUnitOfWork _unitOfWork
+
+@{
+    var totalUsersRole = await _unitOfWork.UserRolesRepository.GetTotalNumberOfUsersRoles(@Model.user.Id);
+}
+
+<br />
+@if (User.IsInRole(Roles.SuperAdmin))
+{
+    @if (TempData["UserRoleDeleteSuccess"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["UserRoleDeleteSuccess"]
+        </div>
+    }
+    @if (TempData["UserDeleteFail"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["UserDeleteFail"]
+        </div>
+    }
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-3 col-6">
+
+                    <div class="small-box bg-info">
+                        <div class="inner">
+                            <h3>@totalUsersRole</h3>
+                            <p>Total Roles</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-users"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="card border border-dark">
+        <div class="card-header bg-dark" style="color:white">
+            <h3>
+                User Details
+                <i class="fas fa-id-card"></i>
+            </h3>
+        </div>
+        <div class="card-body text-primary">
+            <div class="row">
+                <div class="col-4">
+                    <label style="color:black; font-size:Large;">
+                        <strong>@Html.DisplayNameFor(model => model.user.FirstName)</strong>
+                    </label>
+                    <p style="color:black">@Html.DisplayFor(model => model.user.FirstName)</p>
+                </div>
+                <div class="col-4">
+                    <label style="color:black; font-size:Large;">
+                        <strong>@Html.DisplayNameFor(model => model.user.Lastname)</strong>
+                    </label>
+                    <p style="color:black">@Html.DisplayFor(model => model.user.Lastname)</p>
+                </div>
+                <div class="col-4">
+                    <label style="color:black; font-size:Large;">
+                        <strong>@Html.DisplayNameFor(model => model.user.EmployeeNo)</strong>
+                    </label>
+                    <p style="color:black">@Html.DisplayFor(model => model.user.EmployeeNo)</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <label style="color:black; font-size:Large;">
+                        <strong>@Html.DisplayNameFor(model => model.user.Email)</strong>
+                    </label>
+                    <p style="color:black">@Html.DisplayFor(model => model.user.Email)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+
+    <div class="card border border-dark p-1">
+        <div class="card-header bg-success" style="color:white"><h3>User's Roles <i class="fa fa-users"></i></h3></div>
+        <br />
+        <div class="table-responsive">
+            <table class="table table-striped" style="width:100%" id="coursesTable">
+                <thead>
+                    <tr>
+                        <th style="color:black;">Roles</th>
+                        <th style="color:black;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var role in Model.userRoles)
+                    {
+                        <tr>
+                            <td>@role.Role.RoleName</td>
+                            <td>
+                                <button data-userRoleId="@role.Id"
+                                class="btn btn-danger deleteUserRolebtn" style="float:left;margin-left:10px;">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <form asp-controller="Users" asp-action="DeleteUserRole" asp-route-userId="@Model.user.Id"
+          id="DeleteUserRoleForm">
+            <input type="hidden" id="userRoleId" name="userRoleId">
+        </form>
+    </div>
+
+    <br />
+    <div class="card border border-dark p-1">
+        <a asp-controller="Users" asp-action="Index" class="btn btn-info btn-block mb-1">
+            <i class="fa fa-users"></i> Back to Users Page
+        </a>
+    </div>
+}

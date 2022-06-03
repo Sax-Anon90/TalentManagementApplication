@@ -1,0 +1,45 @@
+﻿@model UserViewModel
+
+<div class="modal fade" id="updateUserModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Update User</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form asp-controller="Users" asp-action="UpdateUser">
+                    <input asp-for="Id" type="hidden" />
+                    <label style="color:black" class="col-form-label">
+                        <strong>
+                            @Html.DisplayNameFor(model => model.FirstName)
+                        </strong>
+                    </label>
+                    <input asp-for="FirstName" class="form-control">
+                    <label style="color:black" class="col-form-label">
+                        <strong>
+                            @Html.DisplayNameFor(model => model.Lastname)
+                        </strong>
+                    </label>
+                    <input asp-for="Lastname" class="form-control">
+                    <label style="color:black" class="col-form-label">
+                        <strong>
+                            @Html.DisplayNameFor(model => model.EmployeeNo)
+                        </strong>
+                    </label>
+                    <input asp-for="EmployeeNo" class="form-control">
+                     <label style="color:black" class="col-form-label">
+                        <strong>
+                            @Html.DisplayNameFor(model => model.Email)
+                        </strong>
+                    </label>
+                    <input asp-for="Email" class="form-control">
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" onclick="UpdateUser()" class="btn btn-primary">Update User</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

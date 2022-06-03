@@ -10,6 +10,10 @@
         IGenderRepository GenderRepository { get; }
         IEmployeeFileAttachmentRepository EmployeeFileAttachmentsRepository { get; }
         ICourseEnrollmentsRepository CoursesEnrollmentsRepository { get; }
+        IUserRepository UserRepository { get; }
+        IRolesRepository RoleRepository { get; }
+        IUserRolesRepository UserRolesRepository { get; }
+        IAuthenticationRepository AuthenticationRepository { get; }
         Task SaveChangesAsync();
     }
 }

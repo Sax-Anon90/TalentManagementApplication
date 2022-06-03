@@ -28,7 +28,7 @@ namespace AdminPortal.CoreBusiness.Repositories.Implementation
         }
         public async Task<ICollection<GenderVM>> GetAllGenders()
         {
-            var genders = await _dbContext.Genders
+            var genders = await _dbContext.Genders.AsNoTracking()
                 .ProjectTo<GenderVM>(_configurationProvider)
                 .ToListAsync();
             return genders;

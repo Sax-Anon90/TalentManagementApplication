@@ -5,6 +5,7 @@ using AdminPortal.Common.Models;
 using AdminPortal.CoreBusiness.Repositories.Contracts;
 using AdminPortal.Common.Models.CoursesViewModels;
 using Microsoft.AspNetCore.Authorization;
+using AdminPortal.UI.Constants;
 
 namespace AdminPortal.UI.Controllers
 {
@@ -19,9 +20,9 @@ namespace AdminPortal.UI.Controllers
             this._logger = _logger;
         }
 
+        [Authorize(Roles = Roles.Viewer + "," + Roles.HRAdmin + "," + Roles.SuperAdmin)]
         public async Task<IActionResult> Index()
         {
-
             try
             {
                 var courseCategories = await _unitOfWork.CourseCategoriesRepository.GetAllCourseCategories();
@@ -45,6 +46,7 @@ namespace AdminPortal.UI.Controllers
             }
         }
 
+        [Authorize(Roles = Roles.HRAdmin + "," + Roles.SuperAdmin)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddNewCourse(CoursesAndCourseCategoriesVM coursesAndCourseCategoriesVM)
@@ -71,6 +73,7 @@ namespace AdminPortal.UI.Controllers
             }
         }
 
+        [Authorize(Roles = Roles.HRAdmin + "," + Roles.SuperAdmin)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UploadCourseFileAttachment(CoursesAndCourseCategoriesVM courseFileAttachment, int courseId)
@@ -96,6 +99,7 @@ namespace AdminPortal.UI.Controllers
             }
         }
 
+        [Authorize(Roles = Roles.Viewer + "," + Roles.HRAdmin + "," + Roles.SuperAdmin)]
         [HttpGet]
         public async Task<IActionResult> CourseDetailsView(int? courseId)
         {
@@ -120,6 +124,8 @@ namespace AdminPortal.UI.Controllers
                 return PartialView("_Error");
             }
         }
+
+        [Authorize(Roles = Roles.HRAdmin + "," + Roles.SuperAdmin)]
         [HttpGet]
         public async Task<IActionResult> DownloadCourseFileAttachment(int Id)
         {
@@ -140,6 +146,7 @@ namespace AdminPortal.UI.Controllers
             }
         }
 
+        [Authorize(Roles = Roles.HRAdmin + "," + Roles.SuperAdmin)]
         [HttpGet]
         public async Task<PartialViewResult> UpdateCoursePopUpView(int? courseId)
         {
@@ -159,6 +166,7 @@ namespace AdminPortal.UI.Controllers
             }
         }
 
+        [Authorize(Roles = Roles.HRAdmin + "," + Roles.SuperAdmin)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateCourse(CoursesVM courseUpdateModal)
@@ -185,6 +193,7 @@ namespace AdminPortal.UI.Controllers
             }
         }
 
+        [Authorize(Roles = Roles.HRAdmin + "," + Roles.SuperAdmin)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteCourseFileAttachment(int courseFileAttachmentId, int courseId)
@@ -204,6 +213,7 @@ namespace AdminPortal.UI.Controllers
             }
         }
 
+        [Authorize(Roles = Roles.HRAdmin + "," + Roles.SuperAdmin)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteCourse(int Id)
@@ -223,6 +233,7 @@ namespace AdminPortal.UI.Controllers
             }
         }
 
+        [Authorize(Roles = Roles.HRAdmin + "," + Roles.SuperAdmin)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddNewCourseCategory(CoursesAndCourseCategoriesVM coursesAndCourseCategoriesVM)
@@ -247,9 +258,9 @@ namespace AdminPortal.UI.Controllers
                 TempData["CourseCategoryFail"] = "Something went wrong. Please try again, if the problem persists, contact the systems administrator";
                 return RedirectToAction(nameof(Index), "Courses");
             }
-
         }
 
+        [Authorize(Roles = Roles.Viewer + "," + Roles.HRAdmin + "," + Roles.SuperAdmin)]
         [HttpGet]
         public async Task<IActionResult> CourseCategoryDetailsView(int courseCategoryId)
         {
@@ -267,6 +278,7 @@ namespace AdminPortal.UI.Controllers
             }
         }
 
+        [Authorize(Roles = Roles.HRAdmin + "," + Roles.SuperAdmin)]
         [HttpGet]
         public async Task<IActionResult> UpdateCourseCategoryPopUpView(int courseCategoryId)
         {
@@ -284,6 +296,7 @@ namespace AdminPortal.UI.Controllers
             }
         }
 
+        [Authorize(Roles = Roles.HRAdmin + "," + Roles.SuperAdmin)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateCourseCategory(CourseCategoryVM courseCategoryVM)
@@ -310,6 +323,7 @@ namespace AdminPortal.UI.Controllers
             }
         }
 
+        [Authorize(Roles = Roles.HRAdmin + "," + Roles.SuperAdmin)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteCourseCategory(int courseCategoryId)
@@ -329,6 +343,7 @@ namespace AdminPortal.UI.Controllers
             }
         }
 
+        [Authorize(Roles = Roles.HRAdmin + "," + Roles.SuperAdmin)]
         [HttpGet]
         public async Task<IActionResult> DownloadEmployeesEnrolledInCourseToExcel(int CourseId)
         {
@@ -350,6 +365,7 @@ namespace AdminPortal.UI.Controllers
 
         }
 
+        [Authorize(Roles = Roles.HRAdmin + "," + Roles.SuperAdmin)]
         [HttpGet]
         public async Task<IActionResult> DownloadAllCoursesToExcel()
         {
@@ -370,6 +386,7 @@ namespace AdminPortal.UI.Controllers
             }
         }
 
+        [Authorize(Roles = Roles.HRAdmin + "," + Roles.SuperAdmin)]
         [HttpGet]
         public async Task<IActionResult> DownloadEmployeesWhoCompletedCourseToExcel(int courseId)
         {
@@ -390,6 +407,7 @@ namespace AdminPortal.UI.Controllers
             }
         }
 
+        [Authorize(Roles = Roles.HRAdmin + "," + Roles.SuperAdmin)]
         [HttpGet]
         public async Task<IActionResult> DownloadEmployeesInProccessToExcel(int courseId)
         {
@@ -409,6 +427,8 @@ namespace AdminPortal.UI.Controllers
                 return PartialView("_Error");
             }
         }
+
+        [Authorize(Roles = Roles.HRAdmin + "," + Roles.SuperAdmin)]
         [HttpGet]
         public async Task<IActionResult> DownloadCoursesInCourseCategoryToExcel(int courseCategoryId)
         {

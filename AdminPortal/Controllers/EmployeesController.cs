@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using AdminPortal.Data.Data;
 using AdminPortal.CoreBusiness.Repositories.Contracts;
 using AdminPortal.Common.Models.EmployeesViewModels;
+using AdminPortal.UI.Constants;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AdminPortal.UI.Controllers
 {
@@ -24,16 +26,17 @@ namespace AdminPortal.UI.Controllers
             this._logger = _logger;
         }
 
-        [HttpGet]
+        [Authorize(Roles = Roles.HRAdmin + "," + Roles.SuperAdmin + "," + Roles.Viewer)]
         public async Task<IActionResult> Index()
         {
             try
             {
+                var allEmployees = await _unitOfWork.EmployeeRepository.GetAllEmployees();
                 var EmployeesAndEmployeeTrainingModel = new EmployeeAndEmployeeTrainingVM()
                 {
-                    EmployeesViewModel = await _unitOfWork.EmployeeRepository.GetAllEmployees()
+                    EmployeesViewModel = allEmployees
                 };
-                return View(EmployeesAndEmployeeTrainingModel);
+                return View("Index", EmployeesAndEmployeeTrainingModel);
             }
             catch (Exception ex)
             {
@@ -44,6 +47,7 @@ namespace AdminPortal.UI.Controllers
             }
         }
 
+        [Authorize(Roles = Roles.HRAdmin + "," + Roles.SuperAdmin)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddNewEmployee(EmployeeAndEmployeeTrainingVM employeeAndEmployeeTrainingVM)
@@ -70,6 +74,8 @@ namespace AdminPortal.UI.Controllers
             }
 
         }
+
+        [Authorize(Roles = Roles.HRAdmin + "," + Roles.SuperAdmin)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UploadEmployeeFileAttachment(EmployeeAndEmployeeTrainingVM employeeAndEmployeeTrainingVM, int employeeId)
@@ -96,6 +102,7 @@ namespace AdminPortal.UI.Controllers
 
         }
 
+        [Authorize(Roles = Roles.HRAdmin + "," + Roles.SuperAdmin + "," + Roles.Viewer)]
         [HttpGet]
         public async Task<IActionResult> EmployeeDetailsView(int employeeId)
         {
@@ -118,6 +125,7 @@ namespace AdminPortal.UI.Controllers
             }
         }
 
+        [Authorize(Roles = Roles.HRAdmin + "," + Roles.SuperAdmin)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SearchEmployee(EmployeeAndEmployeeTrainingVM employeeAndEmployeeTrainingVM)
@@ -157,6 +165,7 @@ namespace AdminPortal.UI.Controllers
 
         }
 
+        [Authorize(Roles = Roles.HRAdmin + "," + Roles.SuperAdmin)]
         [HttpGet]
         public async Task<IActionResult> EnrolEmployeeToCourseView(int? employeeId)
         {
@@ -175,13 +184,14 @@ namespace AdminPortal.UI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erorr in searching for employee");
+                _logger.LogError(ex, "Erorr in enrolling employees to course view for employee");
                 TempData["ErrorMessage"] = "Something went wrong with the data request. Please contact the systems Administrator." +
                   "We apologize for the inconvenience";
                 return PartialView("_Error");
             }
         }
 
+        [Authorize(Roles = Roles.HRAdmin + "," + Roles.SuperAdmin)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EnrolEmployeeToCourse(int employeeId, CourseEnrollmentsVM courseEnrollmentsVM)
@@ -209,6 +219,7 @@ namespace AdminPortal.UI.Controllers
 
         }
 
+        [Authorize(Roles = Roles.HRAdmin + "," + Roles.SuperAdmin)]
         [HttpGet]
         public async Task<IActionResult> UpdateEmployeePopUpView(int? employeeId)
         {
@@ -226,6 +237,7 @@ namespace AdminPortal.UI.Controllers
             }
         }
 
+        [Authorize(Roles = Roles.HRAdmin + "," + Roles.SuperAdmin)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateEmployee(EmployeeVM employeeUpdateVM)
@@ -253,6 +265,7 @@ namespace AdminPortal.UI.Controllers
 
         }
 
+        [Authorize(Roles = Roles.HRAdmin + "," + Roles.SuperAdmin)]
         [HttpGet]
         public async Task<IActionResult> DownloadEmployeeFileAttachment(int Id)
         {
@@ -273,6 +286,7 @@ namespace AdminPortal.UI.Controllers
             }
         }
 
+        [Authorize(Roles = Roles.HRAdmin + "," + Roles.SuperAdmin)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteEmployeeFileAttachment(int employeeFileAttachmentId, int employeeIdForDetails)
@@ -293,6 +307,7 @@ namespace AdminPortal.UI.Controllers
 
         }
 
+        [Authorize(Roles = Roles.HRAdmin + "," + Roles.SuperAdmin)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteEmployee(string employeeNo)
@@ -314,6 +329,7 @@ namespace AdminPortal.UI.Controllers
 
         }
 
+        [Authorize(Roles = Roles.HRAdmin + "," + Roles.SuperAdmin)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UnenrollEmployeeFromCourse(int courseEnrollmentId, int employeeId)
@@ -334,6 +350,7 @@ namespace AdminPortal.UI.Controllers
 
         }
 
+        [Authorize(Roles = Roles.HRAdmin + "," + Roles.SuperAdmin)]
         [HttpGet]
         public async Task<IActionResult> DownloadTotalEmployeesToExcel()
         {
@@ -354,6 +371,7 @@ namespace AdminPortal.UI.Controllers
             }
         }
 
+        [Authorize(Roles = Roles.HRAdmin + "," + Roles.SuperAdmin)]
         [HttpGet]
         public async Task<IActionResult> UpdateEmployeeCourseEnrollmentView(int employeeCourseEnrollmentId)
         {
@@ -371,6 +389,7 @@ namespace AdminPortal.UI.Controllers
             }
         }
 
+        [Authorize(Roles = Roles.HRAdmin + "," + Roles.SuperAdmin)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateEmployeeCourseEnrollment(CourseEnrollmentsVM courseEnrollmentsVM)
@@ -398,6 +417,7 @@ namespace AdminPortal.UI.Controllers
             }
         }
 
+        [Authorize(Roles = Roles.HRAdmin + "," + Roles.SuperAdmin)]
         [HttpGet]
         public async Task<IActionResult> DownloadEmployeeCourseEnrollmentsToExcel(int employeeId)
         {

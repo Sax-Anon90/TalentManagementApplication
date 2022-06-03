@@ -16,13 +16,14 @@ var connString = builder.Configuration.GetConnectionString("TalentManagementDbCo
 builder.Services.AddDbContext<SaxTalentManagementContext>(options => options.UseSqlServer(connString));
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie();
+    .AddCookie(q => q.LoginPath="/Authentication/Index");
 
 
 //Dependancy Injection
 builder.Services.AddAutoMapper(typeof(MapperConfig));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IExcelFileService, ExcelFileService>();
+builder.Services.AddScoped<IPasswordHashService, PasswordHashService>();
 
 builder.Host.UseSerilog((ctx, lc) =>
     lc.WriteTo.Console()
@@ -50,6 +51,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Courses}/{action=Index}/{id?}");
 
 app.Run();

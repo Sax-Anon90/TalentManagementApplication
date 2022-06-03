@@ -163,54 +163,63 @@
     <div class="card-header bg-success" style="color:white"><h3>Employee Files and Enrollments <i class="fa fa-users"></i></h3></div>
     <nav>
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
-            <button class="nav-link active" id="nav-User-tab" data-bs-toggle="tab" data-bs-target="#nav-User" type="button" role="tab" aria-controls="nav-User" aria-selected="true"><strong>Files</strong></button>
+            @if (User.IsInRole(Roles.HRAdmin) || User.IsInRole(Roles.SuperAdmin))
+            {
+                <button class="nav-link active" id="nav-User-tab" data-bs-toggle="tab" data-bs-target="#nav-User" type="button" role="tab" aria-controls="nav-User" aria-selected="true"><strong>Files</strong></button>
+            }
             <button class="nav-link" id="nav-Role-tab" data-bs-toggle="tab" data-bs-target="#nav-Role" type="button" role="tab" aria-controls="nav-Role" aria-selected="false"><strong>enrollments</strong></button>
         </div>
     </nav>
     <div class="tab-content" id="nav-tabContent">
-        <div class="tab-pane fade show active" id="nav-User" role="tabpanel" aria-labelledby="nav-User-tab">
-            <br />
-            <div class="table-responsive">
-                <table class="table table-striped" style="width:100%" id="coursesTable">
-                    <thead>
-                        <tr>
-                            <th style="color:black;">File Name</th>
-                            <th style="color:black;">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var file in Model.EmployeeFileAttachmentsVM)
-                        {
+        @if (User.IsInRole(Roles.HRAdmin) || User.IsInRole(Roles.SuperAdmin))
+        {
+            <div class="tab-pane fade show active" id="nav-User" role="tabpanel" aria-labelledby="nav-User-tab">
+                <br />
+                <div class="table-responsive">
+                    <table class="table table-striped" style="width:100%" id="coursesTable">
+                        <thead>
                             <tr>
-                                <td>@file.FileName</td>
-                                <td>
-                                    <a asp-controller="Employees" asp-action="DownloadEmployeeFileAttachment" asp-route-Id="@file.Id"
+                                <th style="color:black;">File Name</th>
+                                <th style="color:black;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var file in Model.EmployeeFileAttachmentsVM)
+                            {
+                                <tr>
+                                    <td>@file.FileName</td>
+                                    <td>
+                                        <a asp-controller="Employees" asp-action="DownloadEmployeeFileAttachment" asp-route-Id="@file.Id"
                                    class="btn btn-info" style="float:left;margin-left:10px;">
-                                        <i class="fa fa-download"></i>
-                                    </a>
-                                    <button type="button" class="btn btn-danger DeleteEmployeeFileAttachment"
+                                            <i class="fa fa-download"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-danger DeleteEmployeeFileAttachment"
                                         data-employeeFileAttachmentId="@file.Id"
                                         data-employeeIdForDetails="@file.EmployeeId" style="float:left;margin-left:10px;">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <form asp-controller="Employees" asp-action="DeleteEmployeeFileAttachment" id="DeleteEmployeeFileAttachmentForm">
+                    <input type="hidden" id="employeeFileAttachmentId" name="employeeFileAttachmentId">
+                    <input type="hidden" id="employeeIdForDetails" name="employeeIdForDetails">
+                </form>
             </div>
-            <form asp-controller="Employees" asp-action="DeleteEmployeeFileAttachment" id="DeleteEmployeeFileAttachmentForm">
-                <input type="hidden" id="employeeFileAttachmentId" name="employeeFileAttachmentId">
-                <input type="hidden" id="employeeIdForDetails" name="employeeIdForDetails">
-            </form>
-        </div>
+        }
         <div id="UpdateEmployeeCourseEnrollmentPlaceHolderHere"></div>
         <div class="tab-pane fade" id="nav-Role" role="tabpanel" aria-labelledby="nav-Role-tab">
             <br />
-            <a asp-controller="Employees" asp-action="DownloadEmployeeCourseEnrollmentsToExcel" asp-route-employeeId="@Model.EmployeeDetails.Id"
+            @if (User.IsInRole(Roles.HRAdmin) || User.IsInRole(Roles.SuperAdmin))
+            {
+                <a asp-controller="Employees" asp-action="DownloadEmployeeCourseEnrollmentsToExcel" asp-route-employeeId="@Model.EmployeeDetails.Id"
                style="float:right;margin-right:10px;" class="btn btn-info">Download to Excel <i class="fas fa-download"></i></a>
-            <br />
-            <br />
+                <br />
+                <br />
+            }
             <br />
             <div class="table-responsive">
                 <table class="table table-striped" style="width:100%" id="EmployeesTable">
@@ -225,9 +234,12 @@
                             <th style="color:black;">
                                 status
                             </th>
-                            <th style="color:black;">
-                                Actions
-                            </th>
+                            @if (User.IsInRole(Roles.HRAdmin) || User.IsInRole(Roles.SuperAdmin))
+                            {
+                                <th style="color:black;">
+                                    Actions
+                                </th>
+                            }
                         </tr>
                     </thead>
                     <tbody>
@@ -250,25 +262,31 @@
                                             break;
                                     }
                                 </td>
-                                <td>
-                                    <button type="button" data-bs-toggle="modal enrollmentModal" data-bs-target="#updateEmployeeCourseEnrollmentModal"
+                                @if (User.IsInRole(Roles.HRAdmin) || User.IsInRole(Roles.SuperAdmin))
+                                {
+                                    <td>
+                                        <button type="button" data-bs-toggle="modal enrollmentModal" data-bs-target="#updateEmployeeCourseEnrollmentModal"
                                         data-url="@Url.Action("UpdateEmployeeCourseEnrollmentView","Employees", new{employeeCourseEnrollmentId = @courseEnrollment.Id})" class="btn btn-warning" style="float:left;margin-left:10px;">
-                                        <i class="fa fa-pencil"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-danger unEnrollEmployee"
+                                            <i class="fa fa-pencil"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-danger unEnrollEmployee"
                                         data-courseEnrollmentId="@courseEnrollment.Id"
                                         data-employeeId="@courseEnrollment.Employee.Id" style="float:left;margin-left:10px;">
-                                        <i class="fa fa-graduation-cap"></i> unenroll
-                                    </button>
-                                </td>
+                                            <i class="fa fa-graduation-cap"></i> unenroll
+                                        </button>
+                                    </td>
+                                }
                             </tr>
                         }
                     </tbody>
                 </table>
-                <form asp-controller="Employees" asp-action="UnenrollEmployeeFromCourse" id="UnenrollEmployeeForm">
-                    <input type="hidden" id="courseEnrollmentId" name="courseEnrollmentId" />
-                    <input type="hidden" id="employeeId" name="employeeId" />
-                </form>
+                @if (User.IsInRole(Roles.HRAdmin) || User.IsInRole(Roles.SuperAdmin))
+                {
+                    <form asp-controller="Employees" asp-action="UnenrollEmployeeFromCourse" id="UnenrollEmployeeForm">
+                        <input type="hidden" id="courseEnrollmentId" name="courseEnrollmentId" />
+                        <input type="hidden" id="employeeId" name="employeeId" />
+                    </form>
+                }
             </div>
         </div>
 

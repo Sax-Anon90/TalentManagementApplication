@@ -6,7 +6,7 @@
     var totalNumberOfCourses = await _unitOfWork.CoursesRepository.GetTotalNumberOfCourses();
     var totalNumberOfCourseCategories = await _unitOfWork.CourseCategoriesRepository.GetTotalNoOfCourseCategories();
     var totalNumberOfCourseFiles = await _unitOfWork.CourseFileAttachmentsRepository.GetTotalNumberOfCourseFiles();
-    var totalEnrollments = await _unitOfWork.CoursesEnrollmentsRepository. GetTotalOfAllEnrollments();
+    var totalEnrollments = await _unitOfWork.CoursesEnrollmentsRepository.GetTotalOfAllEnrollments();
 }
 <br />
 
@@ -157,54 +157,59 @@
         <div class="tab-pane fade show active" id="nav-User" role="tabpanel" aria-labelledby="nav-User-tab">
             <br />
             <div id=""></div>
-            <button type="button" data-bs-toggle="modal" data-bs-target="#addCourseModal" class="btn btn-success"
+            @if (User.IsInRole(Roles.HRAdmin) || User.IsInRole(Roles.SuperAdmin))
+            {
+                <button type="button" data-bs-toggle="modal" data-bs-target="#addCourseModal" class="btn btn-success"
                     style="float:left;margin-left:10px;">
-                <i class="fa fa-plus"></i> Add Course
-            </button>
-            <a asp-controller="Courses" asp-action="DownloadAllCoursesToExcel" class="btn btn-info"
+                    <i class="fa fa-plus"></i> Add Course
+                </button>
+                <a asp-controller="Courses" asp-action="DownloadAllCoursesToExcel" class="btn btn-info"
                style="float:right;margin-right:10px;">
-                <i class="fa fa-download"></i> Download to excel
-            </a>
-            <!-- Add New Course Pop View Begin-->
-            <div class="modal fade" id="addCourseModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Add new Course</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form asp-controller="Courses" asp-action="AddNewCourse">
-                                <div class="mb-3">
-                                    <label style="color:black" class="col-form-label">
-                                        <strong>
-                                            @Html.DisplayNameFor(model => model.CourseCreateViewModel.CourseCategoryId) (Required)
-                                        </strong>
-                                    </label>
-                                    <select asp-for="CourseCreateViewModel.CourseCategoryId" class="form-select" asp-items="Model.CourseCreateViewModel.CourseCategories">
-                                        <option disabled>--Select Course Category--</option>
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    <label style="color:black" class="col-form-label">
-                                        <strong>
-                                            @Html.DisplayNameFor(model => model.CourseCreateViewModel.CourseName) (Required)
-                                        </strong>
-                                    </label>
-                                    <input asp-for="CourseCreateViewModel.CourseName" class="form-control">
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button type="submit" onclick="AddNewCourse()" class="btn btn-primary">Add Course</button>
-                                </div>
-                            </form>
+                    <i class="fa fa-download"></i> Download to excel
+                </a>
+                <!-- Add New Course Pop View Begin-->
+                <div class="modal fade" id="addCourseModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Add new Course</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form asp-controller="Courses" asp-action="AddNewCourse">
+                                    <div class="mb-3">
+                                        <label style="color:black" class="col-form-label">
+                                            <strong>
+                                                @Html.DisplayNameFor(model => model.CourseCreateViewModel.CourseCategoryId) (Required)
+                                            </strong>
+                                        </label>
+                                        <select asp-for="CourseCreateViewModel.CourseCategoryId" class="form-select" asp-items="Model.CourseCreateViewModel.CourseCategories">
+                                            <option disabled>--Select Course Category--</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label style="color:black" class="col-form-label">
+                                            <strong>
+                                                @Html.DisplayNameFor(model => model.CourseCreateViewModel.CourseName) (Required)
+                                            </strong>
+                                        </label>
+                                        <input asp-for="CourseCreateViewModel.CourseName" class="form-control">
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" onclick="AddNewCourse()" class="btn btn-primary">Add Course</button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <!-- Add New Course Pop View End-->
-            <br />
-            <br />
+                <!-- Add New Course Pop View End-->
+                <br />
+                <br />
+            }
+
+
             <br />
             <div id=CourseDetailsPlaceHolderHere></div>
             <div id=UpdateCoursePlaceHolderHere></div>
@@ -214,7 +219,11 @@
                         <tr>
                             <th style="color:black;">Course Name</th>
                             <th style="color:black;">Category</th>
-                            <th style="color:black;">Course content File</th>
+                            </a>
+                            @if (User.IsInRole(Roles.HRAdmin) || User.IsInRole(Roles.SuperAdmin))
+                            {
+                                <th style="color:black;">Course content File</th>
+                            }
                             <th style="color:black;">Actions</th>
                         </tr>
                     </thead>
@@ -224,26 +233,32 @@
                             <tr>
                                 <td>@course.CourseName</td>
                                 <td>@course.CourseCategory.CategoryName</td>
-                                <td>
-                                    <label for="coursefileInput"
+                                @if (User.IsInRole(Roles.HRAdmin) || User.IsInRole(Roles.SuperAdmin))
+                                {
+                                    <td>
+                                        <label for="coursefileInput"
                                        class="btn btn-primary CourseFileAttachmentData"
                                        data-courseId="@course.Id">
-                                        <i class="fa fa-file"></i> upload
-                                    </label>
-                                </td>
+                                            <i class="fa fa-file"></i> upload
+                                        </label>
+                                    </td>
+                                }
                                 <td>
                                     <a onclick="CourseDetailsView()" asp-controller="Courses" asp-action="CourseDetailsView" asp-route-courseId="@course.Id"
                                    class="btn btn-info" style="float:left;margin-left:10px;">
                                         <i class="fa fa-info-circle"></i>
                                     </a>
-                                    <button type="button" data-bs-toggle="modal updateModal" data-bs-target="#updateCourseModal"
+                                    @if (User.IsInRole(Roles.HRAdmin) || User.IsInRole(Roles.SuperAdmin))
+                                    {
+                                        <button type="button" data-bs-toggle="modal updateModal" data-bs-target="#updateCourseModal"
                                         data-url="@Url.Action("UpdateCoursePopUpView", "Courses", new {courseId = @course.Id})" class="btn btn-warning" style="float:left;margin-left:10px;">
-                                        <i class="fa fa-pencil"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-danger  DeleteCoursebtn" style="float:left;margin-left:10px;"
+                                            <i class="fa fa-pencil"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-danger  DeleteCoursebtn" style="float:left;margin-left:10px;"
                                         data-Id="@course.Id">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    }
                                 </td>
                             </tr>
                         }
@@ -261,41 +276,43 @@
         </div>
         <div class="tab-pane fade" id="nav-Role" role="tabpanel" aria-labelledby="nav-Role-tab">
             <br />
-            <button type="button" data-bs-toggle="modal" data-bs-target="#addCourseCategoryModal" class="btn btn-success" style="float:left;margin-left:10px;">
-                <i class="fa fa-plus"></i> Add Course Category
-            </button>
+            @if (User.IsInRole(Roles.HRAdmin) || User.IsInRole(Roles.SuperAdmin))
+            {
+                <button type="button" data-bs-toggle="modal" data-bs-target="#addCourseCategoryModal" class="btn btn-success" style="float:left;margin-left:10px;">
+                    <i class="fa fa-plus"></i> Add Course Category
+                </button>
 
-            <!-- Add New Course Category Pop View Begin-->
-            <div class="modal fade" id="addCourseCategoryModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Add new Course Category</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form asp-controller="Courses" asp-action="AddNewCourseCategory">
-                                <div class="mb-3">
-                                    <label style="color:black" class="col-form-label">
-                                        <strong>
-                                            @Html.DisplayNameFor(model => model.courseCategoryCreateVM.CategoryName) (Required)
-                                        </strong>
-                                    </label>
-                                    <input asp-for="courseCategoryCreateVM.CategoryName" class="form-control">
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button type="submit" onclick="AddNewCourseCategory()" class="btn btn-primary">Add Course Category</button>
-                                </div>
-                            </form>
+                <!-- Add New Course Category Pop View Begin-->
+                <div class="modal fade" id="addCourseCategoryModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Add new Course Category</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form asp-controller="Courses" asp-action="AddNewCourseCategory">
+                                    <div class="mb-3">
+                                        <label style="color:black" class="col-form-label">
+                                            <strong>
+                                                @Html.DisplayNameFor(model => model.courseCategoryCreateVM.CategoryName) (Required)
+                                            </strong>
+                                        </label>
+                                        <input asp-for="courseCategoryCreateVM.CategoryName" class="form-control">
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" onclick="AddNewCourseCategory()" class="btn btn-primary">Add Course Category</button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <!-- Add New Course Category Pop View End-->
-
-            <br />
-            <br />
+                <!-- Add New Course Category Pop View End-->
+                <br />
+                <br />
+            }
             <br />
             <div class="table-responsive">
                 <div id="CourseCategoryDetailsPlaceHolderHere"></div>
@@ -313,18 +330,21 @@
                             <tr>
                                 <td>@category.CategoryName</td>
                                 <td>
-                                    <a asp-controller="Courses" asp-action="CourseCategoryDetailsView" asp-route-courseCategoryId="@category.Id" type="button"
+                                    <a onclick="CourseCategoryDetailsView()" asp-controller="Courses" asp-action="CourseCategoryDetailsView" asp-route-courseCategoryId="@category.Id" type="button"
                                    class="btn btn-info" style="float:left;margin-left:10px;">
                                         <i class="fa fa-info-circle"></i>
                                     </a>
-                                    <button type="button" data-bs-toggle="modal update" data-bs-target="#UpdateCourseCategoryModal"
+                                    @if (User.IsInRole(Roles.HRAdmin) || User.IsInRole(Roles.SuperAdmin))
+                                    {
+                                        <button type="button" data-bs-toggle="modal update" data-bs-target="#UpdateCourseCategoryModal"
                                         data-url="@Url.Action("UpdateCourseCategoryPopUpView", "Courses", new {courseCategoryId = @category.Id})" class="btn btn-warning" style="float:left;margin-left:10px;">
-                                        <i class="fa fa-pencil"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-danger DeleteCourseCategorybtn"
+                                            <i class="fa fa-pencil"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-danger DeleteCourseCategorybtn"
                                         data-courseCategoryId="@category.Id" style="float:left;margin-left:10px;">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    }
                                 </td>
                             </tr>
                         }

@@ -22,7 +22,7 @@ namespace AdminPortal.CoreBusiness.Repositories.Implementation
         }
         public async Task<ICollection<DepartmentsVM>> GetAllDepartments()
         {
-            var departments = await _dbContext.Departments
+            var departments = await _dbContext.Departments.AsNoTracking()
                 .ProjectTo<DepartmentsVM>(_configurationProvider)
                 .ToListAsync();
             return departments;

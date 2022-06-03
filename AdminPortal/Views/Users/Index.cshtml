@@ -1,0 +1,231 @@
+﻿@model UsersViewModel
+@inject IUnitOfWork _unitOfWork
+
+@{
+    var totalUsers = await _unitOfWork.UserRepository.GetTotalNumberOfUsers();
+    var totalViewers = await _unitOfWork.UserRolesRepository.GetTotalNumberOfViewerRoles();
+    var totalHRAdmins = await _unitOfWork.UserRolesRepository.GetTotalNumberOfHRAdmins();
+    var totalSuperAdmins = await _unitOfWork.UserRolesRepository.GetTotalNumberOfSuperAdmins();
+}
+<br />
+
+@if (User.IsInRole(Roles.SuperAdmin))
+{
+    @if (TempData["AddNewUserSuccess"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["AddNewUserSuccess"]
+        </div>
+    }
+    @if (TempData["AddNewUserFailed"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["AddNewUserFailed"]
+        </div>
+    }
+    @if (TempData["AssignRolesToUserSuccess"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["AssignRolesToUserSuccess"]
+        </div>
+    }
+    @if (TempData["AssignRolesToUsersFail"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["AssignRolesToUsersFail"]
+        </div>
+    }
+    @if (TempData["UpdateUserFail"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["UpdateUserFail"]
+        </div>
+    }
+    @if (TempData["UserUpdateSuccess"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["UserUpdateSuccess"]
+        </div>
+    }
+    @if (TempData["UserDeleteSuccess"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["UserDeleteSuccess"]
+        </div>
+    }
+    @if (TempData["UserDeleteFail"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["UserDeleteFail"]
+        </div>
+    }
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-3 col-6">
+                    <div class="small-box bg-info">
+                        <div class="inner">
+                            <h3>@totalUsers</h3>
+                            <p>Total Users</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-graduation-cap"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-6">
+                    <div class="small-box bg-danger">
+                        <div class="inner">
+                            <h3>@totalViewers</h3>
+                            <p>Total Viewers</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-list"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-6">
+                    <div class="small-box bg-warning">
+                        <div class="inner">
+                            <h3>@totalHRAdmins</h3>
+                            <p>Total HR Administrators</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-graduation-cap"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-6">
+                    <div class="small-box bg-primary">
+                        <div class="inner">
+                            <h3>@totalSuperAdmins</h3>
+                            <p>Total Super Administrators</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-file"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <div class="card border border-dark p-1">
+        <div class="card-header bg-dark" style="color:white"><h3>User Management <i class="fa fa-user"></i></h3></div>
+        <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="nav-User" role="tabpanel" aria-labelledby="nav-User-tab">
+                <br />
+                <button type="button" data-bs-toggle="modal" data-bs-target="#addUserModal" class="btn btn-success"
+                    style="float:left;margin-left:10px;">
+                    <i class="fa fa-plus"></i> Add User
+                </button>
+                <br />
+                <br />
+                <br />
+                <!--Add User Form Pop Up begin-->
+
+            <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Add new user</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form asp-controller="Users" asp-action="AddNewUser">
+                                    <label style="color:black" class="col-form-label">
+                                        <strong>
+                                            @Html.DisplayNameFor(model => model.userCreateModel.FirstName) (Required)
+                                        </strong>
+                                    </label>
+                                    <input asp-for="userCreateModel.FirstName" class="form-control">
+                                    <label style="color:black" class="col-form-label">
+                                        <strong>
+                                            @Html.DisplayNameFor(model => model.userCreateModel.Lastname) (Required)
+                                        </strong>
+                                    </label>
+                                    <input asp-for="userCreateModel.Lastname" class="form-control">
+                                    <label style="color:black" class="col-form-label">
+                                        <strong>
+                                            @Html.DisplayNameFor(model => model.userCreateModel.EmployeeNo) (Required)
+                                        </strong>
+                                    </label>
+                                    <input asp-for="userCreateModel.EmployeeNo" class="form-control">
+                                    <label style="color:black" class="col-form-label">
+                                        <strong>
+                                            @Html.DisplayNameFor(model => model.userCreateModel.Email) (Required)
+                                        </strong>
+                                    </label>
+                                    <input asp-for="userCreateModel.Email" class="form-control">
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" onclick="AddNewUser()" class="btn btn-primary">Add User</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--Add User Form Pop Up End-->
+            <div id="updateUserPlaceHolderHere"></div>
+                <div class="table-responsive">
+                    <table class="table table-striped" style="width:100%" id="coursesTable">
+                        <thead>
+                            <tr>
+                                <th style="color:black;">First Name</th>
+                                <th style="color:black;">Last Name</th>
+                                <th style="color:black;">Email</th>
+                                <th style="color:black;">Roles</th>
+                                <th style="color:black;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var user in Model.AllUsersModel)
+                            {
+                                <tr>
+                                    <td>
+                                        @user.FirstName
+                                    </td>
+                                    <td>
+                                        @user.Lastname
+                                    </td>
+                                    <td>
+                                        @user.Email
+                                    </td>
+                                    <td>
+                                        <a onclick="AssignRolesToUserView()" asp-controller="Users" asp-action="AssignRolesToUserView" asp-route-userId="@user.Id"
+                                   class="btn btn-primary" style="float:left;margin-left:10px;">
+                                            <i class="fa fa-users"></i> Assign Roles
+                                        </a>
+                                    </td>
+                                    <td>
+
+                                        <a onclick="UserDetailsView()" asp-controller="Users" asp-action="UserDetailsView" asp-route-userId="@user.Id"
+                                   class="btn btn-info" style="float:left;margin-left:10px;">
+                                            <i class="fa fa-info-circle"></i>
+                                        </a>
+                                        <button type="button" data-bs-toggle="modal userUpdateModal" data-bs-target="#updateUserModal"
+                                        data-url="@Url.Action("UpdateUserPopUpView", "Users", new {userId = @user.Id})" class="btn btn-warning" style="float:left;margin-left:10px;">
+                                            <i class="fa fa-pencil"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-danger DeleteUserbtn" style="float:left;margin-left:10px;"
+                                        data-userId="@user.Id">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <form asp-controller="Users" asp-action="DeleteUser"
+                  id="DeleteUserForm">
+                    <input type="hidden" id="userId" name="userId">
+                </form>
+            </div>
+        </div>
+    </div>
+}

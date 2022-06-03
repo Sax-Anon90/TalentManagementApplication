@@ -21,8 +21,6 @@ namespace AdminPortal.Common.Models.EmployeesViewModels
         [Display(Name = "Position Title")]
         public string? PositionTitle { get; set; }
 
-        public virtual ICollection<CourseEnrollmentsVM> CourseEnrollments { get; set; }
-
         public bool Valdiation()
         {
             if(Id is 0 || EmployeeNo is null || FirstName is null || LastName is null ||

@@ -3,6 +3,7 @@ using AdminPortal.Common.Models;
 using AutoMapper;
 using AdminPortal.Common.Models.CoursesViewModels;
 using AdminPortal.Common.Models.EmployeesViewModels;
+using AdminPortal.Common.Models.UserViewModels;
 
 namespace AdminPortal.CoreBusiness.Mappings
 {
@@ -20,6 +21,11 @@ namespace AdminPortal.CoreBusiness.Mappings
             CreateMap<EmployeeFileAttachment, EmployeeFileAttachmentsVM>().ReverseMap();
             CreateMap<CourseEnrollment, CourseEnrollmentsVM>().ReverseMap();
             CreateMap<CourseEnrollment, ICollection<CourseEnrollmentsVM>>().ReverseMap();
+            CreateMap<User, UserViewModel>().ReverseMap();
+            CreateMap<User, UserCreateViewModel>().ReverseMap();
+            CreateMap<UserRole, UserRolesViewModel>().ReverseMap();
+            CreateMap<UserRole, ICollection<UserRolesViewModel>>().ReverseMap();
+            CreateMap<Role, RolesViewModel>().ReverseMap();
             CreateMap<Department, DepartmentsVM>().ReverseMap();
             CreateMap<Gender, GenderVM>().ReverseMap();
         }

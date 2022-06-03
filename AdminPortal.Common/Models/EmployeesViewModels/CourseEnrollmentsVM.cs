@@ -2,7 +2,7 @@
 
 namespace AdminPortal.Common.Models.EmployeesViewModels
 {
-    //Employees enrolled in a course hence class is in EmployeesViewModel not CoursesViewModel
+    //Employees enrolled in a course hence class is in EmployeesViewModels folder and not CoursesViewModel
     public class CourseEnrollmentsVM : BaseViewModel.BaseViewModel
     {
         public string? Status { get; set; }
@@ -18,7 +18,7 @@ namespace AdminPortal.Common.Models.EmployeesViewModels
         //To populate all courses in "CoursesToEnrol" object and use it for checkbox selection
         public Dictionary<string, bool> CoursesToEnrol { get; set; } = new Dictionary<string, bool>();
 
-        public bool Validation()
+        public bool Validation()    
         {
             if (Status is null || EmployeeId is null || EmployeeId is 0 || CourseId is null || CourseId is 0)
             {

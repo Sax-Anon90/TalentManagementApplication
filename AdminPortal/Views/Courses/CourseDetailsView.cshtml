@@ -100,57 +100,63 @@
     <br />
     <nav>
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
-            <button class="nav-link active" id="nav-User-tab" data-bs-toggle="tab" data-bs-target="#nav-User" type="button" role="tab" aria-controls="nav-User" aria-selected="true"><strong>Course Files</strong></button>
-            <button class="nav-link" id="nav-Role-tab" data-bs-toggle="tab" data-bs-target="#nav-Role" type="button" role="tab" aria-controls="nav-Role" aria-selected="false"><strong>Employees Enrolled</strong></button>
-            <button class="nav-link" id="nav-EmployeesCompleted-tab" data-bs-toggle="tab" data-bs-target="#nav-EmployeesCompleted" type="button" role="tab" aria-controls="nav-EmployeesCompleted" aria-selected="false"><strong>Employees Completed</strong></button>
-            <button class="nav-link" id="nav-EmployeesInProcess-tab" data-bs-toggle="tab" data-bs-target="#nav-EmployeesInProcess" type="button" role="tab" aria-controls="nav-EmployeesInProcess" aria-selected="false"><strong>Employees In Process</strong></button>
+            @if (User.IsInRole(Roles.HRAdmin) || User.IsInRole(Roles.SuperAdmin))
+            {
+                <button class="nav-link active" id="nav-User-tab" data-bs-toggle="tab" data-bs-target="#nav-User" type="button" role="tab" aria-controls="nav-User" aria-selected="true"><strong>Course Files</strong></button>
+                <button class="nav-link" id="nav-Role-tab" data-bs-toggle="tab" data-bs-target="#nav-Role" type="button" role="tab" aria-controls="nav-Role" aria-selected="false"><strong>Employees Enrolled</strong></button>
+                <button class="nav-link" id="nav-EmployeesCompleted-tab" data-bs-toggle="tab" data-bs-target="#nav-EmployeesCompleted" type="button" role="tab" aria-controls="nav-EmployeesCompleted" aria-selected="false"><strong>Employees Completed</strong></button>
+                <button class="nav-link" id="nav-EmployeesInProcess-tab" data-bs-toggle="tab" data-bs-target="#nav-EmployeesInProcess" type="button" role="tab" aria-controls="nav-EmployeesInProcess" aria-selected="false"><strong>Employees In Process</strong></button>
+            }
         </div>
     </nav>
     <div class="tab-content" id="nav-tabContent">
-        <div class="tab-pane fade show active" id="nav-User" role="tabpanel" aria-labelledby="nav-User-tab">
-            <br />
-            @if (Model.CourseFileAttachments.Count() == 0)
-            {
-                <div class="alert alert-danger" role="alert">
-                    This course does not have any course content material
-                </div>
-            }
-            else
-            {
+        @if (User.IsInRole(Roles.HRAdmin) || User.IsInRole(Roles.SuperAdmin))
+        {
+            <div class="tab-pane fade show active" id="nav-User" role="tabpanel" aria-labelledby="nav-User-tab">
+                <br />
+                @if (Model.CourseFileAttachments.Count() == 0)
+                {
+                    <div class="alert alert-danger" role="alert">
+                        This course does not have any course content material
+                    </div>
+                }
+                else
+                {
 
-                <div class="table-responsive">
-                    <table class="table table-striped" style="width:100%" id="CourseFilesTable">
-                        <thead>
-                            <tr>
-                                <th style="color:black;">File Name</th>
-                                <th style="color:black;">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var file in Model.CourseFileAttachments)
-                            {
+                    <div class="table-responsive">
+                        <table class="table table-striped" style="width:100%" id="CourseFilesTable">
+                            <thead>
                                 <tr>
-                                    <td>@file.FileName</td>
-                                    <td>
-                                        <a class="btn btn-info" asp-controller="Courses" asp-action="DownloadCourseFileAttachment"
-                                   asp-route-Id="@file.Id">
-                                            <i class="fa fa-download"></i>
-                                        </a>
-                                        <button type="button" data-courseFileAttachmentId="@file.Id" class="btn btn-danger deleteCourseFile">
-                                            <i class="far fa-trash-alt"></i>
-                                        </button>
-                                    </td>
+                                    <th style="color:black;">File Name</th>
+                                    <th style="color:black;">Actions</th>
                                 </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-                <form asp-controller="Courses" asp-action="DeleteCourseFileAttachment" asp-route-courseId="@Model.CourseDetails.Id"
+                            </thead>
+                            <tbody>
+                                @foreach (var file in Model.CourseFileAttachments)
+                                {
+                                    <tr>
+                                        <td>@file.FileName</td>
+                                        <td>
+                                            <a class="btn btn-info" asp-controller="Courses" asp-action="DownloadCourseFileAttachment"
+                                   asp-route-Id="@file.Id">
+                                                <i class="fa fa-download"></i>
+                                            </a>
+                                            <button type="button" data-courseFileAttachmentId="@file.Id" class="btn btn-danger deleteCourseFile">
+                                                <i class="far fa-trash-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <form asp-controller="Courses" asp-action="DeleteCourseFileAttachment" asp-route-courseId="@Model.CourseDetails.Id"
                   id="DeleteCourseFileAttachmentForm">
-                    <input type="hidden" id="courseFileAttachmentId" name="courseFileAttachmentId">
-                </form>
-            }
-        </div>
+                        <input type="hidden" id="courseFileAttachmentId" name="courseFileAttachmentId">
+                    </form>
+                }
+            </div>
+        }
         <div class="tab-pane fade" id="nav-Role" role="tabpanel" aria-labelledby="nav-Role-tab">
             <br />
             @if (Model.EmployeesInCourse.Count() == 0)
@@ -161,15 +167,18 @@
             }
             else
             {
-                <a asp-controller="Courses" asp-action="DownloadEmployeesEnrolledInCourseToExcel" asp-route-CourseId="@Model.CourseDetails.Id" class="btn btn-info"
-               style="float:right;margin-right:10px;">
-                    <i class="fa fa-download"></i> Download to excel
-                </a>
+                @if (User.IsInRole(Roles.HRAdmin) || User.IsInRole(Roles.SuperAdmin))
+                {
+                    <a asp-controller="Courses" asp-action="DownloadEmployeesEnrolledInCourseToExcel" asp-route-CourseId="@Model.CourseDetails.Id" class="btn btn-info"
+                    style="float:right;margin-right:10px;">
+                        <i class="fa fa-download"></i> Download to excel
+                    </a>
+                }
                 <br />
                 <br />
                 <br />
                 <div class="table-responsive">
-                    <table class="table table-striped" style="width:100%" id="EmployeesInCourseTable">
+                    <table class="table table-striped" style="width:100%" id="EmployeesEnrolledInCourseTable">
                         <thead>
                             <tr>
                                 <th style="color:black;">First Name</th>
@@ -203,15 +212,18 @@
             }
             else
             {
-                <a asp-controller="Courses" asp-action="DownloadEmployeesWhoCompletedCoursesToExcel" asp-route-courseId="@Model.CourseDetails.Id" class="btn btn-info"
+                @if (User.IsInRole(Roles.HRAdmin) || User.IsInRole(Roles.SuperAdmin))
+                {
+                    <a asp-controller="Courses" asp-action="DownloadEmployeesWhoCompletedCoursesToExcel" asp-route-courseId="@Model.CourseDetails.Id" class="btn btn-info"
                style="float:right;margin-right:10px;">
-                    <i class="fa fa-download"></i> Download to excel
-                </a>
+                        <i class="fa fa-download"></i> Download to excel
+                    </a>
+                }
                 <br />
                 <br />
                 <br />
                 <div class="table-responsive">
-                    <table class="table table-striped" style="width:100%" id="EmployeesInCourseTable">
+                    <table class="table table-striped" style="width:100%" id="EmployeesCompletedCourseTable">
                         <thead>
                             <tr>
                                 <th style="color:black;">First Name</th>
@@ -245,15 +257,18 @@
             }
             else
             {
-                <a asp-controller="Courses" asp-action="DownloadEmployeesInProccessToExcel" asp-route-CourseId="@Model.CourseDetails.Id" class="btn btn-info"
+                @if (User.IsInRole(Roles.HRAdmin) || User.IsInRole(Roles.SuperAdmin))
+                {
+                    <a asp-controller="Courses" asp-action="DownloadEmployeesInProccessToExcel" asp-route-CourseId="@Model.CourseDetails.Id" class="btn btn-info"
                style="float:right;margin-right:10px;">
-                    <i class="fa fa-download"></i> Download to excel
-                </a>
+                        <i class="fa fa-download"></i> Download to excel
+                    </a>
+                }
                 <br />
                 <br />
                 <br />
                 <div class="table-responsive">
-                    <table class="table table-striped" style="width:100%" id="EmployeesInCourseTable">
+                    <table class="table table-striped" style="width:100%" id="EmployeesInProccessCourseTable">
                         <thead>
                             <tr>
                                 <th style="color:black;">First Name</th>
